@@ -13,6 +13,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class SwerveModule {
   private static final double kWheelRadius = 0.0508;
@@ -25,8 +28,13 @@ public class SwerveModule {
   private final PWMSparkMax m_driveMotor;
   private final PWMSparkMax m_turningMotor;
 
+  private final CANSparkMax myDriveMotor;
+  private final CANSparkMax myTurningMotor;
+
   private final Encoder m_driveEncoder;
   private final Encoder m_turningEncoder;
+
+  private final RelativeEncoder drivingEncoder;
 
   // Gains are for example purposes only - must be determined for your own robot!
   private final PIDController m_drivePIDController = new PIDController(1, 0, 0);
@@ -64,8 +72,14 @@ public class SwerveModule {
     m_driveMotor = new PWMSparkMax(driveMotorChannel);
     m_turningMotor = new PWMSparkMax(turningMotorChannel);
 
+    myDriveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
+    myTurningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
+
+
     m_driveEncoder = new Encoder(driveEncoderChannelA, driveEncoderChannelB);
     m_turningEncoder = new Encoder(turningEncoderChannelA, turningEncoderChannelB);
+
+    drivingEncoder = myDriveMotor.getEncoder();
 
     // Set the distance per pulse for the drive encoder. We can simply use the
     // distance traveled for one rotation of the wheel divided by the encoder
