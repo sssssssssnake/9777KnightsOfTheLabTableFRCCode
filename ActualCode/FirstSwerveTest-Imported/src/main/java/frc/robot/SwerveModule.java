@@ -16,6 +16,7 @@ import edu.wpi.first.units.Measure;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -30,8 +31,8 @@ public class SwerveModule {
   // private final PWMSparkMax m_driveMotor;
   // private final PWMSparkMax m_turningMotor;
 
-  private final CANSparkMax driveMotor;
-  private final CANSparkMax turningMotor;
+  private final CANSparkFlex driveMotor;
+  private final CANSparkFlex turningMotor;
 
   // private final Encoder m_driveEncoder;
   private final CANcoder turnEncoder;
@@ -69,8 +70,8 @@ public class SwerveModule {
     // m_driveMotor = new PWMSparkMax(driveMotorChannel);
     // m_turningMotor = new PWMSparkMax(turningMotorChannel);
 
-    driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
-    turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
+    driveMotor   = new CANSparkFlex(driveMotorChannel, MotorType.kBrushless);
+    turningMotor = new CANSparkFlex(turningMotorChannel, MotorType.kBrushless);
 
     turnEncoder = new CANcoder(turnEncoderChannel);
     drivingEncoder = driveMotor.getEncoder();
