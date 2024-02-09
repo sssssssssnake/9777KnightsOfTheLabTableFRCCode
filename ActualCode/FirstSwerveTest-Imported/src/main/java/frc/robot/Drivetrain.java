@@ -21,10 +21,32 @@ public class Drivetrain {
   private final Translation2d m_backLeftLocation = new Translation2d(-0.3302, 0.3302);
   private final Translation2d m_backRightLocation = new Translation2d(-0.3302, -0.3302);
 
-  private final SwerveModule m_frontLeft =  new SwerveModule(1, 2, 0);
-  private final SwerveModule m_frontRight = new SwerveModule(3, 4, 4);
-  private final SwerveModule m_backLeft =   new SwerveModule(5, 6, 8);
-  private final SwerveModule m_backRight =  new SwerveModule(7, 8, 1);
+
+  //TODO: Flash and add proper identifier for encoders
+  private final int FLdriveMtr = 8;
+  private final int FLturnMtr  = 9;
+  private final int FLencoder  = 16;
+
+
+  private final int FRdriveMtr = 10;
+  private final int FRturnMtr  = 11;
+  private final int FRencoder  = 17;
+
+  
+  private final int BLdriveMtr = 12;
+  private final int BLturnMtr  = 13;
+  private final int BLencoder  = 18;
+
+
+  private final int BRdriveMtr = 14;
+  private final int BRturnMtr  = 15;
+  private final int BRencoder  = 19;
+
+
+  private final SwerveModule m_frontLeft =  new SwerveModule(FLdriveMtr, FLturnMtr, FLencoder);
+  private final SwerveModule m_frontRight = new SwerveModule(FRdriveMtr, FRturnMtr, FRencoder);
+  private final SwerveModule m_backLeft =   new SwerveModule(BLdriveMtr, BLturnMtr, BLencoder);
+  private final SwerveModule m_backRight =  new SwerveModule(BRdriveMtr, BRturnMtr, BRencoder);
 
   private final AnalogGyro m_gyro = new AnalogGyro(0);
 
