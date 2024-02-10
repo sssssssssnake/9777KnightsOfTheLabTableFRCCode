@@ -42,3 +42,7 @@ void TurnMotor::runToState() {
     //set the motor to the power
     basicTurnMotor.Set(power);
 }
+
+double TurnMotor::getCurrentAngle() {
+    return basicTurnEncoder.GetAbsolutePosition().GetValueAsDouble() * 2 * std::numbers::pi;
+}
