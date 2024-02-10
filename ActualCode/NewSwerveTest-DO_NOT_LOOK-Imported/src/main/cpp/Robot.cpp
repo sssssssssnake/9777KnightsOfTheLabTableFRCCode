@@ -22,7 +22,8 @@ void Robot::RobotInit() {
  * LiveWindow and SmartDashboard integrated updating.
  */
 void Robot::RobotPeriodic() {
-  
+  frc::SmartDashboard::PutNumber("Desired Angle", testDesiredAngle);
+  frc::SmartDashboard::PutNumber("Current Angle", testMotor.getCurrentAngle());
 }
 
 /**

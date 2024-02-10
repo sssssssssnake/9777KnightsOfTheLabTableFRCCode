@@ -17,4 +17,5 @@ public:
     TurnMotor(int getCanId, int getEncoderId);
     void setDesiredAngle(double radianMeasure);
     void runToState();
+    double getCurrentAngle();
 };
