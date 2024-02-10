@@ -8,6 +8,8 @@
 
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
+#include <frc/XboxController.h>
+#include "TurnMotor.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -29,4 +31,7 @@ class Robot : public frc::TimedRobot {
   const std::string kAutoNameDefault = "Default";
   const std::string kAutoNameCustom = "My Auto";
   std::string m_autoSelected;
+  frc::XboxController m_controller{0};
+  double testDesiredAngle = 0;
+  TurnMotor testMotor{9, 16};
 };
