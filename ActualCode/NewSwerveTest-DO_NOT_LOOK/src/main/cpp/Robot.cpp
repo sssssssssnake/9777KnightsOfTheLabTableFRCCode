@@ -4,7 +4,6 @@
 
 #include "Robot.h"
 
-
 #include <fmt/core.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
@@ -58,7 +57,12 @@ void Robot::AutonomousPeriodic() {
 
 void Robot::TeleopInit() {}
 
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopPeriodic() {
+  // test turn motor
+  testDesiredAngle = m_controller.GetRightY() * .01;
+  testMotor.setDesiredAngle(testDesiredAngle);
+  testMotor.runToState();
+}
 
 void Robot::DisabledInit() {}
 
