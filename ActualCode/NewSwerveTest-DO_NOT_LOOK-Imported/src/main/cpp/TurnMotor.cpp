@@ -31,7 +31,7 @@ void TurnMotor::runToState() {
     //logic is to set the new position as a "0" and then run the motor to that position
     //right now only p
     double power = 0;
-    double differenceInState = setState - basicTurnEncoder.GetAbsolutePosition().GetValueAsDouble() * 2 * std::numbers::pi;
+    double differenceInState = setState - (basicTurnEncoder.GetAbsolutePosition().GetValueAsDouble() * 2 * std::numbers::pi) -std::numbers::pi;
 
     //convert the range of differenceInState to be between 1 and -1
     differenceInState = differenceInState / std::numbers::pi;
@@ -46,3 +46,4 @@ void TurnMotor::runToState() {
 double TurnMotor::getCurrentAngle() {
     return basicTurnEncoder.GetAbsolutePosition().GetValueAsDouble() * 2 * std::numbers::pi;
 }
+

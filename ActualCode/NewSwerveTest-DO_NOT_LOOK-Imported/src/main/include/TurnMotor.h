@@ -18,4 +18,5 @@ public:
     void setDesiredAngle(double radianMeasure);
     void runToState();
     double getCurrentAngle();
+    double getCurrentDifference();
 };
