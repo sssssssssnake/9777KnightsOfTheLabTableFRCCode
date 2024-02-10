@@ -55,7 +55,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Back button zeros the gyroscope
-    if(m_controller.getAButtonReleased())
+    if(m_controller.getAButtonReleased()){
             // No requirements because we don't need to interrupt anything
             m_drivetrainSubsystem.zeroGyroscope();
           }
