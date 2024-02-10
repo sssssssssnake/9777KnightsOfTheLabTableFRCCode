@@ -1,6 +1,7 @@
 #include <fmt/core.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <rev/CANSparkFlex.h>
+#include <ctre/phoenix6/CANcoder.hpp>
 #include <AHRS.h>
 
 class TurnMotor
