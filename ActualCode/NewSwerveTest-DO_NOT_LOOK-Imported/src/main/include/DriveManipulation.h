@@ -26,5 +26,6 @@ public:
     DriveManipulation(frc::XboxController* getController);
     void setNewCenterState();
     void runToState();
+    
 };
 
