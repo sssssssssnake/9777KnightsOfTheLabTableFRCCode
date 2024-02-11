@@ -31,24 +31,24 @@ void TurnMotor::runToState() {
     //logic is to set the new position as a "0" and then run the motor to that position
     //right now only p
     double power = 0;
-    double differenceInState = setState - (basicTurnEncoder.GetAbsolutePosition().GetValueAsDouble() * 2 * std::numbers::pi);
-
-    //convert the range of differenceInState to be between 1 and -1
-    differenceInState = ((differenceInState -std::numbers::pi)/ std::numbers::pi);
-
-    //multiply the difference by the p value
-    power = differenceInState * pidStuff[0];
-
-    if (setState > basicTurnEncoder.GetAbsolutePosition().GetValueAsDouble() * 2 * std::numbers::pi) {
-        basicTurnMotor.Set(power);
-    } else if (setState < basicTurnEncoder.GetAbsolutePosition().GetValueAsDouble() * 2 * std::numbers::pi)
-    {
-        basicTurnMotor.Set(-power);
-    }
     
+    double whereItIs = basicTurnEncoder.GetAbsolutePosition().GetValueAsDouble() * 2 * std::numbers::pi;
+    double whereItIsOffset = whereItIs - std::numbers::pi;
+    // get the error between where it is now, and where it needs to be
 
-    //set the motor to the power
-    basicTurnMotor.Set(power);
+    double difference = whereItIs - setState;
+    double differenceOffset = whereItIsOffset - setState;
+
+    // the module can go either way so we only need to worry about moving it within 180 degrees
+    bool backwards = (std::abs(differenceOffset) > std::numbers::pi/2);
+
+    // if it is backwards, we use the offset difference, otherwise we use the normal difference
+    // we need them to switch if and only in the case of the offset difference
+    if (backwards) {
+        basicTurnMotor.Set(-differenceOffset * pidStuff[0]);
+    } else {
+        basicTurnMotor.Set(difference * pidStuff[0]);
+    }
 }
 
 double TurnMotor::getCurrentAngle() {
