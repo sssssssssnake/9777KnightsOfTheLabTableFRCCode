@@ -34,10 +34,18 @@ void TurnMotor::runToState() {
     double differenceInState = setState - (basicTurnEncoder.GetAbsolutePosition().GetValueAsDouble() * 2 * std::numbers::pi);
 
     //convert the range of differenceInState to be between 1 and -1
-    differenceInState = (differenceInState / std::numbers::pi) - std::numbers::pi;
+    differenceInState = ((differenceInState -std::numbers::pi)/ std::numbers::pi);
 
     //multiply the difference by the p value
     power = differenceInState * pidStuff[0];
+
+    if (setState > basicTurnEncoder.GetAbsolutePosition().GetValueAsDouble() * 2 * std::numbers::pi) {
+        basicTurnMotor.Set(power);
+    } else if (setState < basicTurnEncoder.GetAbsolutePosition().GetValueAsDouble() * 2 * std::numbers::pi)
+    {
+        basicTurnMotor.Set(-power);
+    }
+    
 
     //set the motor to the power
     basicTurnMotor.Set(power);
@@ -48,5 +56,5 @@ double TurnMotor::getCurrentAngle() {
 }
 
 double TurnMotor::getCurrentDifference() {
-    return setState - (basicTurnEncoder.GetAbsolutePosition().GetValueAsDouble() * 2 * std::numbers::pi);
+    return setState - (basicTurnEncoder.GetAbsolutePosition().GetValueAsDouble() * 2 * std::numbers::pi) - std::numbers::pi;
 }
