@@ -24,6 +24,7 @@ void Robot::RobotInit() {
 void Robot::RobotPeriodic() {
   frc::SmartDashboard::PutNumber("Desired Angle", testDesiredAngle);
   frc::SmartDashboard::PutNumber("Current Angle", testMotor.getCurrentAngle());
+  frc::SmartDashboard::PutNumber("difference", testMotor.getCurrentDifference());
 }
 
 /**
