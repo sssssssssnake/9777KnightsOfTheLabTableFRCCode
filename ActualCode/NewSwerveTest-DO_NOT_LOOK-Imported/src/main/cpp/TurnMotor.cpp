@@ -33,22 +33,37 @@ void TurnMotor::runToState() {
     double power = 0;
     
     double whereItIs = basicTurnEncoder.GetAbsolutePosition().GetValueAsDouble() * 2 * std::numbers::pi;
-    double whereItIsOffset = whereItIs - std::numbers::pi;
-    // get the error between where it is now, and where it needs to be
 
-    double difference = whereItIs - setState;
-    double differenceOffset = whereItIsOffset - setState;
+    double otherValidStates[2] = {
+        setState - (std::numbers::pi *2),
+        setState + (std::numbers::pi *2)
+    };
+    
+    // the encoder (whereItIs) resets to 0 every 2pi, but we can tell the power to go
+    // beyond 2pi, and it wont matter until it resets to 0
+    // so, we just need to set it for the closest congruent angle
 
-    // the module can go either way so we only need to worry about moving it within 180 degrees
-    bool backwards = (std::abs(differenceOffset) > std::numbers::pi/2);
+    double differences[3] = {
+        whereItIs - setState,
+        whereItIs - otherValidStates[0],
+        whereItIs - otherValidStates[1]
+    };
 
-    // if it is backwards, we use the offset difference, otherwise we use the normal difference
-    // we need them to switch if and only in the case of the offset difference
-    if (backwards) {
-        basicTurnMotor.Set(-differenceOffset * pidStuff[0]);
+    int smallestDifference = 0;
+
+    // find the smallest difference
+    if (std::labs(differences[0]) < std::labs(differences[1])) {
+        smallestDifference = 0;
+    } else if (std::labs(differences[1]) < std::labs(differences[2])) {
+        smallestDifference = 1;
     } else {
-        basicTurnMotor.Set(difference * pidStuff[0]);
+        smallestDifference = 2;
     }
+
+    // note that the negative power goes forward
+    power = differences[smallestDifference] * pidStuff[0];
+    
+    basicTurnMotor.Set(power);
 }
 
 double TurnMotor::getCurrentAngle() {

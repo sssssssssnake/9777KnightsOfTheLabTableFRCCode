@@ -13,8 +13,8 @@ private:
     
     double swerveDriveDesiredXandY[4][2] = {{0, 0}, {0, 0}, {0, 0}, {0, 0}}; // in meters
 
-    double swerveDriveDesiredSpeeds[4] = {0, 0, 0, 0}; // manitude of vector in meters per second
-    double swerveDriveDesiredAngles[4] = {0, 0, 0, 0}; // in radians
+    //swerve default angles
+    double swerveModuleDefaultAngles[4] = {std::numbers::pi * 3 / 4, std::numbers::pi * 1 / 4, std::numbers::pi * 5 / 4, std::numbers::pi * 7 / 4};
 
 
     frc::XboxController* controller;
