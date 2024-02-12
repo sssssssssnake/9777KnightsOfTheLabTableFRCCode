@@ -24,7 +24,7 @@ void TurnMotor::setDesiredAngle(double radianMeasure)
 
     previousState = basicTurnEncoder.GetAbsolutePosition().GetValueAsDouble() * 2 * std::numbers::pi;
     setState = radianMeasure;
-    pidStuff = {.1,0,0};
+    pidStuff = {.5,0,0};
 }
 
 void TurnMotor::runToState() {
@@ -35,8 +35,8 @@ void TurnMotor::runToState() {
     double whereItIs = basicTurnEncoder.GetAbsolutePosition().GetValueAsDouble() * 2 * std::numbers::pi;
 
     double otherValidStates[2] = {
-        setState - (std::numbers::pi *2),
-        setState + (std::numbers::pi *2)
+        setState + (std::numbers::pi *2),
+        setState - (std::numbers::pi *2)
     };
     
     // the encoder (whereItIs) resets to 0 every 2pi, but we can tell the power to go
