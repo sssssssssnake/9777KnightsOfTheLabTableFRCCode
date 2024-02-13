@@ -51,9 +51,20 @@ void DriveManipulation::setNewCenterState() {
     // we will use the arccosine to determine the angle
     // we will use the x value as the adjacent side, and the hypotenuse as the hypotenuse
     double anglesDerivedFromPosition[4] = {0, 0, 0, 0};
-    for (int i = 0; i < 4; i++) {
-        anglesDerivedFromPosition[i] = std::acos(swerveDriveDesiredXandY[i][0]);
+    if (y>0) {
+        for (int i = 0; i < 4; i++) {
+            anglesDerivedFromPosition[i] = std::acos(swerveDriveDesiredXandY[i][0]);
+        }
+    } else
+    {
+        // if the y value is negative, the angle is pi + acos
+        for (int i = 0; i < 4; i++) {
+            anglesDerivedFromPosition[i] = std::numbers::pi + std::acos(swerveDriveDesiredXandY[i][0]);
+        }
     }
+    
+
+
 
     // we will now look at the angles from the default roation (swerveModuleDefaultAngles)
 
