@@ -18,10 +18,10 @@ private:
 
 
     frc::XboxController* controller;
-    TurnMotor frontLeft{8, 16};
-    TurnMotor frontRight{10, 17};
-    TurnMotor backLeft{12, 18};
-    TurnMotor backRight{14, 19};
+    TurnMotor frontLeft{9, 16};
+    TurnMotor frontRight{11, 17};
+    TurnMotor backLeft{13, 18};
+    TurnMotor backRight{15, 19};
 public:
     DriveManipulation(frc::XboxController* getController);
     void setNewCenterState();

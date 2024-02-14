@@ -22,9 +22,7 @@ void Robot::RobotInit() {
  * LiveWindow and SmartDashboard integrated updating.
  */
 void Robot::RobotPeriodic() {
-  frc::SmartDashboard::PutNumber("Desired Angle", testDesiredAngle);
-  frc::SmartDashboard::PutNumber("Current Angle", testMotor.getCurrentAngle());
-  frc::SmartDashboard::PutNumber("difference", testMotor.getCurrentDifference());
+
 }
 
 /**
@@ -62,17 +60,8 @@ void Robot::AutonomousPeriodic() {
 void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic() {
-  // test turn motor
-  testDesiredAngle = testDesiredAngle + m_controller.GetRightY() * .1;
-  if (testDesiredAngle > (std::numbers::pi *2)) {
-    testDesiredAngle = testDesiredAngle - std::numbers::pi *2;
-  } else if (testDesiredAngle <0 )
-  {
-    testDesiredAngle = 0-testDesiredAngle;
-  }
-  
-  testMotor.setDesiredAngle(testDesiredAngle);
-  testMotor.runToState();
+  drivetrain.setNewCenterState();
+  drivetrain.runToState();
 }
 
 void Robot::DisabledInit() {}
