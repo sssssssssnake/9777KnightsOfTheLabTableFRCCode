@@ -52,14 +52,14 @@ public class CanCoderFactoryBuilder {
 
         @Override
         public double getAbsoluteAngle() {
-            StatusSignal<Double> angleCode = encoder.getPosition();
+            StatusSignal<Double> angleCode = encoder.getAbsolutePosition();
 
             for (int i = 0; i < ATTEMPTS; i++) {
                 if (angleCode.getStatus() == StatusCode.OK) break;
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) { }
-                angleCode = encoder.getPosition();
+                angleCode = encoder.getAbsolutePosition();
             }
 
             CtreUtils.checkCtreError(angleCode.getStatus(), "Failed to retrieve CANcoder "+encoder.getDeviceID()+" absolute position after "+ATTEMPTS+" tries");

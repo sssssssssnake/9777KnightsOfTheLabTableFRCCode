@@ -18,13 +18,25 @@ TurnMotor::TurnMotor(int getCanId, int getEncoderId)
 
 void TurnMotor::setDesiredAngle(double radianMeasure)
 {
+    
+    
     errorInState = previousState - basicTurnEncoder.GetAbsolutePosition().GetValueAsDouble() * 2 * std::numbers::pi;
     //absolute the error
     errorInState = std::abs(errorInState);
 
     previousState = basicTurnEncoder.GetAbsolutePosition().GetValueAsDouble() * 2 * std::numbers::pi;
     setState = radianMeasure;
-    pidStuff = {.5,0,0};
+    while (setState >= std::numbers::pi * 2)
+    {
+        setState -= std::numbers::pi * 2;
+    }
+    while (setState <= 0)
+    {
+        setState += std::numbers::pi * 2;
+    }
+    pidStuff[0] = 0.4;
+    pidStuff[1] = 0;
+    pidStuff[2] = 0;
 }
 
 void TurnMotor::runToState() {
@@ -52,18 +64,18 @@ void TurnMotor::runToState() {
     int smallestDifference = 0;
 
     // find the smallest difference
-    if (std::labs(differences[0]) < std::labs(differences[1])) {
+    if (std::labs(differences[0]) < std::labs(differences[1]) && std::labs(differences[0]) < std::labs(differences[2])) {
         smallestDifference = 0;
-    } else if (std::labs(differences[1]) < std::labs(differences[2])) {
+    } else if (std::labs(differences[1]) < std::labs(differences[2]) && std::labs(differences[1]) < std::labs(differences[0])) {
         smallestDifference = 1;
-    } else {
+    } else if (std::labs(differences[2]) < std::labs(differences[0]) && std::labs(differences[2]) < std::labs(differences[1])) {
         smallestDifference = 2;
     }
 
     // note that the negative power goes forward
     power = differences[smallestDifference] * pidStuff[0];
     
-    basicTurnMotor.Set(power);
+    basicTurnMotor.Set(power + pidStuff[1] * std::labs(setState - previousState));
 }
 
 double TurnMotor::getCurrentAngle() {
@@ -71,5 +83,5 @@ double TurnMotor::getCurrentAngle() {
 }
 
 double TurnMotor::getCurrentDifference() {
-    return setState - (basicTurnEncoder.GetAbsolutePosition().GetValueAsDouble() * 2 * std::numbers::pi) - std::numbers::pi;
+    return setState - (basicTurnEncoder.GetAbsolutePosition().GetValueAsDouble() * 2 * std::numbers::pi);
 }

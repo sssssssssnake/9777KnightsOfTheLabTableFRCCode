@@ -12,7 +12,7 @@ private:
     double errorInState;
     rev::CANSparkFlex basicTurnMotor;
     ctre::phoenix6::hardware::CANcoder basicTurnEncoder;
-    std::vector<double> pidStuff;
+    double pidStuff[3];
     double difference;
 public:
     TurnMotor(int getCanId, int getEncoderId);

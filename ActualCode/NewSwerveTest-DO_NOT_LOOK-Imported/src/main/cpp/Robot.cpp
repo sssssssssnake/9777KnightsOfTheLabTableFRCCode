@@ -22,7 +22,12 @@ void Robot::RobotInit() {
  * LiveWindow and SmartDashboard integrated updating.
  */
 void Robot::RobotPeriodic() {
-
+  frc::SmartDashboard::PutNumber("Front Left Angle", drivetrain.getSwerveModuleAngle(0));
+  frc::SmartDashboard::PutNumber("Front Right Angle", drivetrain.getSwerveModuleAngle(1));
+  frc::SmartDashboard::PutNumber("Back Left Angle", drivetrain.getSwerveModuleAngle(2));
+  frc::SmartDashboard::PutNumber("Back Right Angle", drivetrain.getSwerveModuleAngle(3));
+  frc::SmartDashboard::PutNumber("Controller y", m_controller.GetLeftY());
+  frc::SmartDashboard::PutNumber("Controller x", m_controller.GetLeftX());
 }
 
 /**
