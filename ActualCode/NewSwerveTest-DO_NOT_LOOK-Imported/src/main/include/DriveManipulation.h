@@ -14,7 +14,7 @@ private:
     double swerveDriveDesiredXandY[4][2] = {{0, 0}, {0, 0}, {0, 0}, {0, 0}}; // in meters
 
     //swerve default angles
-    double const swerveModuleDefaultAngles[4] = {std::numbers::pi * 3 / 4, std::numbers::pi * 1 / 4, std::numbers::pi * 5 / 4, std::numbers::pi * 7 / 4};
+    double const swerveModuleDefaultAngles[4] = {-(std::numbers::pi /4), -(std::numbers::pi * 3 / 4), -(std::numbers::pi * 5 / 4), -std::numbers::pi * 7 / 4};
 
     // offset for where stuff is in radians
     double swerveAngleOffset[4] = {4.2107776536,5.595962,6.062292,0.503146};

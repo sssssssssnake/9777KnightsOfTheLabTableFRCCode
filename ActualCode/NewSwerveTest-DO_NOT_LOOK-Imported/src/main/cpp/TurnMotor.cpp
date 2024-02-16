@@ -5,6 +5,7 @@
 #include <ctre/phoenix6/CANcoder.hpp>
 #include <numbers>
 
+
 #include "TurnMotor.h"
 
 
@@ -34,9 +35,8 @@ void TurnMotor::setDesiredAngle(double radianMeasure)
     {
         setState += std::numbers::pi * 2;
     }
-    pidStuff[0] = 0.4;
-    pidStuff[1] = 0;
-    pidStuff[2] = 0;
+
+
 }
 
 void TurnMotor::runToState() {
@@ -73,9 +73,11 @@ void TurnMotor::runToState() {
     }
 
     // note that the negative power goes forward
-    power = differences[smallestDifference] * pidStuff[0];
+    double powerProportion = pidStuff[0] * differences[smallestDifference];
+
+    power = powerProportion;
     
-    basicTurnMotor.Set(power + pidStuff[1] * std::labs(setState - previousState));
+    basicTurnMotor.Set(power);
 }
 
 double TurnMotor::getCurrentAngle() {
