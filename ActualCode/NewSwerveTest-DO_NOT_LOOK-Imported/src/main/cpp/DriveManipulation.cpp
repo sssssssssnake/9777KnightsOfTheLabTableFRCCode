@@ -10,57 +10,52 @@ DriveManipulation::DriveManipulation(frc::XboxController* getController) {
 }
 
 void DriveManipulation::setNewCenterState() {
-    // grab the x and y from the robot
-    double x = controller->GetLeftX();
-    double y = -controller->GetLeftY();
-    double rotation = controller->GetRightX();
+    x = controller->GetLeftX();
+    y = -controller->GetLeftY();
+    rotation = controller->GetRightX();
 
-    // This holds the vector for the position or translation of the robot and each module
-    double translationVector[2] = {x,y};
+    // V_p
+    double positionVector[2] = {x, y};
+    // v_s
+    double newRotationVector[4][2];
+    double constantRotationVector[4][2];
 
-    // Since the rotation from the controller is from -1, to 1, we need to convert it from 0 to 2pi
-    double radianMeasure = (std::numbers::pi) + (rotation * std::numbers::pi);
-
-    // now we want to calculate the x and y components of of the rotation vector
-    double swerveAngleComponentsFromRotation[4][2] = {
-        {std::cos(constantRotationAngle[0]), std::sin(constantRotationAngle[0])},
-        {std::cos(constantRotationAngle[1]), std::sin(constantRotationAngle[1])},
-        {std::cos(constantRotationAngle[2]), std::sin(constantRotationAngle[2])},
-        {std::cos(constantRotationAngle[3]), std::sin(constantRotationAngle[3])}
-    };
-    
-    // Math dictates that we need to multiply the rotation vector by the length over the speed of the final swerve module
-    
-    double lengthAndWidth = 13.5;
-
-    for (int i = 0; i < 4; i++)
-    {
-        swerveAngleComponentsFromRotation[i][0] *= lengthAndWidth*std::sqrt(2);
-        swerveAngleComponentsFromRotation[i][1] *= lengthAndWidth*std::sqrt(2);
-    }
-    
-    // We can now calculate the final vector for the swerve module
-    double swerveModuleFinalVector[4][2];
+    // we need to get the x and y components of the rotation vector
     for (int i = 0; i < 4; i++) {
-        swerveModuleFinalVector[i][0] = translationVector[0] + swerveAngleComponentsFromRotation[i][0];
-        swerveModuleFinalVector[i][1] = translationVector[1] + swerveAngleComponentsFromRotation[i][1];
+        newRotationVector[i][0] = std::cos(constantRotationAngle[i]);
+        newRotationVector[i][1] = std::sin(constantRotationAngle[i]);
     }
 
-    // Now we can calculate the angle for the swerve module
-    
+    // we then need to scale the rotation vector by the rotation value
     for (int i = 0; i < 4; i++) {
-        if (swerveModuleFinalVector[i][1] < 0) {
-            swerveModuleAngles[i] = std::acos(swerveModuleFinalVector[i][0]);
-        } else if (swerveModuleFinalVector[i][1] > 0) {
-            swerveModuleAngles[i] = (2*std::numbers::pi - std::acos(swerveModuleFinalVector[i][0]));
-        }
+        newRotationVector[i][0] *= rotation;
+        newRotationVector[i][1] *= rotation;
     }
 
-    // Now just set the offset for the different angles of the swerve modules
+    // now that we have the two scaled and set vector arrays, we can add them together
+
+    // V_f
+    double finalVector[4][2];
     for (int i = 0; i < 4; i++) {
-        swerveModuleAngles[i] += swerveAngleOffset[i] + (std::numbers::pi / 2);
+        finalVector[i][0] = positionVector[0] + newRotationVector[i][0];
+        finalVector[i][1] = positionVector[1] + newRotationVector[i][1];
     }
-    
+
+    // now we can get the angle from the position vector
+    for (int i = 0; i < 4; i++) {
+        // we dont use atan2 because we want to keep the angle between 0 and 2pi
+        if (finalVector[i][1] > 0) {
+            swerveModuleAngles[i] = std::acos(finalVector[i][0] / std::sqrt(finalVector[i][0] * finalVector[i][0] + finalVector[i][1] * finalVector[i][1]));
+        } else if (finalVector[i][1] < 0) {
+            swerveModuleAngles[i] = std::numbers::pi * 2 - std::acos(finalVector[i][0] / std::sqrt(finalVector[i][0] * finalVector[i][0] + finalVector[i][1] * finalVector[i][1]));
+        } 
+    }
+
+    // dont forget to add the offset
+    for (int i = 0; i < 4; i++) {
+        swerveModuleAngles[i] += swerveAngleOffset[i] + (std::numbers::pi /2);
+    }
+
 }
 
 void DriveManipulation::runToState() {
@@ -76,7 +71,6 @@ void DriveManipulation::runToState() {
 }
 
 double DriveManipulation::getSwerveModuleAngle(int module) {
-    int index = 0;
     switch (module) {
         case 0:
             return frontLeft.getCurrentAngle();

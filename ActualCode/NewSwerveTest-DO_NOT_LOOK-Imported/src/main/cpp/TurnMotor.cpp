@@ -31,7 +31,7 @@ void TurnMotor::setDesiredAngle(double radianMeasure)
     {
         setState -= std::numbers::pi * 2;
     }
-    while (setState <= 0)
+    while (setState < 0)
     {
         setState += std::numbers::pi * 2;
     }

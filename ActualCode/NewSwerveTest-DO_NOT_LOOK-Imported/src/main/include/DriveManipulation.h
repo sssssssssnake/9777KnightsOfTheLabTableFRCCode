@@ -12,6 +12,9 @@ private:
     // Angle for the translation of the robot/ module derived from position
     double angleFromPosition;
     
+    double x;
+    double y;
+    double rotation;
 
 
     // These are constants that needn't be changed by any code
@@ -25,8 +28,8 @@ private:
      * These are the default radian measure of the robot
      * @category Constant Expression */
     double constantRotationAngle[4] = {
-        - std::numbers::pi / 4,
         - std::numbers::pi * 3 /4,
+        - std::numbers::pi / 4,
         - std::numbers::pi * 5 / 4 ,
         - std::numbers::pi * 7 / 4
     };
