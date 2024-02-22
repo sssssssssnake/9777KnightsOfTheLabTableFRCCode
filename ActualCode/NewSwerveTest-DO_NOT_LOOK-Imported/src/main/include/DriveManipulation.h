@@ -1,6 +1,7 @@
 #include <numbers>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/XboxController.h>
+#include <rev/CANSparkFlex.h>
 #include "TurnMotor.h"
 
 class DriveManipulation
@@ -39,6 +40,12 @@ private:
     TurnMotor frontRight{11, 17};
     TurnMotor backLeft{13, 18};
     TurnMotor backRight{15, 19};
+
+    rev::CANSparkFlex frontLeftDrive{8, rev::CANSparkLowLevel::MotorType::kBrushless};
+    rev::CANSparkFlex frontRightDrive{10, rev::CANSparkLowLevel::MotorType::kBrushless};
+    rev::CANSparkFlex backLeftDrive{12, rev::CANSparkLowLevel::MotorType::kBrushless};
+    rev::CANSparkFlex backRightDrive{14, rev::CANSparkLowLevel::MotorType::kBrushless};
+
 public:
     DriveManipulation(frc::XboxController* getController);
     void setNewCenterState();

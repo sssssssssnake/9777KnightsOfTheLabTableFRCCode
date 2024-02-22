@@ -42,18 +42,34 @@ void DriveManipulation::setNewCenterState() {
     }
 
     // now we can get the angle from the position vector
+    // for (int i = 0; i < 4; i++) {
+    //     // we dont use atan2 because we want to keep the angle between 0 and 2pi
+    //     if (finalVector[i][1] > 0) {
+    //         swerveModuleAngles[i] = std::acos(finalVector[i][0] / std::sqrt(finalVector[i][0] * finalVector[i][0] + finalVector[i][1] * finalVector[i][1]));
+    //     } else if (finalVector[i][1] < 0) {
+    //         swerveModuleAngles[i] = std::numbers::pi * 2 - std::acos(finalVector[i][0] / std::sqrt(finalVector[i][0] * finalVector[i][0] + finalVector[i][1] * finalVector[i][1]));
+    //     } 
+    // }
+
+    // calculate the hypotenuse
+    double hypotenuse = std::sqrt(finalVector[0][0] * finalVector[0][0] + finalVector[0][1] * finalVector[0][1]);
+    // calculate the angle using the previously commented out for loop, use hypotenuse
     for (int i = 0; i < 4; i++) {
-        // we dont use atan2 because we want to keep the angle between 0 and 2pi
         if (finalVector[i][1] > 0) {
-            swerveModuleAngles[i] = std::acos(finalVector[i][0] / std::sqrt(finalVector[i][0] * finalVector[i][0] + finalVector[i][1] * finalVector[i][1]));
+            swerveModuleAngles[i] = std::acos(finalVector[i][0] / hypotenuse);
         } else if (finalVector[i][1] < 0) {
-            swerveModuleAngles[i] = std::numbers::pi * 2 - std::acos(finalVector[i][0] / std::sqrt(finalVector[i][0] * finalVector[i][0] + finalVector[i][1] * finalVector[i][1]));
+            swerveModuleAngles[i] = std::numbers::pi * 2 - std::acos(finalVector[i][0] / hypotenuse);
         } 
     }
 
     // dont forget to add the offset
     for (int i = 0; i < 4; i++) {
         swerveModuleAngles[i] += swerveAngleOffset[i] + (std::numbers::pi /2);
+    }
+
+    // now that al the angles are set, we can set the speeds
+    for (int i = 0; i < 4; i++) {
+        swerveModuleSpeeds[i] = std::sqrt(finalVector[i][0] * finalVector[i][0] + finalVector[i][1] * finalVector[i][1]);
     }
 
 }
@@ -68,6 +84,12 @@ void DriveManipulation::runToState() {
     frontRight.runToState();
     backLeft.runToState();
     backRight.runToState();
+
+    // now we can set the speeds
+    frontLeftDrive.Set(swerveModuleSpeeds[0]);
+    frontRightDrive.Set(swerveModuleSpeeds[1]);
+    backLeftDrive.Set(swerveModuleSpeeds[2]);
+    backRightDrive.Set(swerveModuleSpeeds[3]);
 }
 
 double DriveManipulation::getSwerveModuleAngle(int module) {
