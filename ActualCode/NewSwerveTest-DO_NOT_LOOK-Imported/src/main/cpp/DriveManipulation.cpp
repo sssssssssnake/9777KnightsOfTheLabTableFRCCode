@@ -14,6 +14,7 @@ void DriveManipulation::setNewCenterState() {
     y = -controller->GetLeftY();
     rotation = controller->GetRightX();
 
+
     // V_p
     double positionVector[2] = {x, y};
     // v_s
