@@ -7,7 +7,7 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
 
 public class IntakeSubsystem {
-    HardwareMap robot = new HardwareMap();
+    HardwareSoftware robot ;
 
     //Intake Motor
     CANSparkMax mIntake;
@@ -52,7 +52,11 @@ public class IntakeSubsystem {
         double output = intakePID.calculate(currentV, velocity);
 
         // Ensure the outputs are within the valid range of -1 to 1
-        output = Math.max(-1.0, Math.min(1.0, output));
+        if (output > 1.0) {
+            output = 1.0;
+        } else if (output < -1.0) {
+            output = -1.0;
+        }
 
         // Set the motor speed
         mIntake.set(output);

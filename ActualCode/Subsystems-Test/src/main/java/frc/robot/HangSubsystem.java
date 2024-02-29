@@ -7,7 +7,7 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
 
 public class HangSubsystem {
-    HardwareMap robot = new HardwareMap();
+    HardwareSoftware robot;
 
     //Right Delivery Motor
     CANSparkMax mHangRight;
@@ -139,5 +139,6 @@ public class HangSubsystem {
         encoderRight.setPosition(0);
         encoderLeft.setPosition(0);
     }
+    
 }
 
