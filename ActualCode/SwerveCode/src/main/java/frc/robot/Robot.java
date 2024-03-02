@@ -43,7 +43,12 @@ public class Robot extends TimedRobot {
    * SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    SmartDashboard.putNumber("frontLeft", HardThenSoft.frontLeft.basicTurnEncoder.getAbsolutePosition().getValueAsDouble());
+    SmartDashboard.putNumber("frontRight", HardThenSoft.frontRight.basicTurnEncoder.getAbsolutePosition().getValueAsDouble());
+    SmartDashboard.putNumber("backLeft", HardThenSoft.backLeft.basicTurnEncoder.getAbsolutePosition().getValueAsDouble());
+    SmartDashboard.putNumber("backRight", HardThenSoft.backRight.basicTurnEncoder.getAbsolutePosition().getValueAsDouble());
+  }
 
   /**
    * This autonomous (along with the chooser code above) shows how to select between different
@@ -85,6 +90,35 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     drive.setNewCenterState();
     drive.runToState();
+
+    if (controller.getAButton()) { 
+      HardThenSoft.mDeliveryLeft.set(1);
+      HardThenSoft.mDeliveryRight.set(-1);
+    } else if (controller.getYButton()) {
+      HardThenSoft.mDeliveryLeft.set(-1);
+      HardThenSoft.mDeliveryRight.set(1);
+    } else {
+      HardThenSoft.mDelivery.stop();
+    }
+
+   if (controller.getBButton()) {
+      HardThenSoft.mIntake.set(-.5);
+    } else if (controller.getXButton()) {
+      HardThenSoft.mIntake.set(.5);
+    } else {
+      HardThenSoft.mIntake.set(0);
+    }
+
+    if (controller.getLeftBumper()) {
+      HardThenSoft.mHangLeft.set(-.5);
+      HardThenSoft.mHangRight.set(.5);
+    } else if (controller.getRightBumper()) {
+      HardThenSoft.mHangLeft.set(.5);
+      HardThenSoft.mHangRight.set(-.5);
+    } else {
+      HardThenSoft.mHangLeft.set(0);
+      HardThenSoft.mHangRight.set(0);
+    }
   }
 
   /** This function is called once when the robot is disabled. */

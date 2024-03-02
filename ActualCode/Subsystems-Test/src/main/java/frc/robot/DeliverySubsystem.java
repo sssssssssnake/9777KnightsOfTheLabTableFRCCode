@@ -23,12 +23,11 @@ public class DeliverySubsystem {
     //Left Delivery Encoder
     RelativeEncoder encoderLeft;
 
-    double speedWeWant = 1;
 
     
     //FIXME: Tune the Delivery PID Values
-    SparkPIDController deliveryLeftPID = mDeliveryLeft.getPIDController();
-    SparkPIDController deliveryRightPID = mDeliveryRight.getPIDController();
+    SparkPIDController deliveryLeftPID;
+    SparkPIDController deliveryRightPID;
     
     //PID Gains
     public double kP, kI, kD, kIZone, kFF, maxOutput, minOutput;
@@ -37,17 +36,21 @@ public class DeliverySubsystem {
      * @param DeliveryLeft The CAN ID of the left delivery motor
      */
     DeliverySubsystem(int DeliveryRight, int DeliveryLeft){
-
         
-
+        
+        
         //add the delivery motors
         mDeliveryRight = new CANSparkMax(DeliveryRight, CANSparkLowLevel.MotorType.kBrushless);
         mDeliveryLeft = new CANSparkMax(DeliveryLeft, CANSparkLowLevel.MotorType.kBrushless);
-
-
+        
+        
         //get encoders from delivery motors
         encoderRight = mDeliveryRight.getEncoder();
         encoderLeft = mDeliveryLeft.getEncoder();
+        
+        deliveryLeftPID = mDeliveryLeft.getPIDController();
+        deliveryRightPID = mDeliveryRight.getPIDController();
+
 
         deliveryLeftPID.setP(kP);
         deliveryLeftPID.setI(kI);
@@ -117,8 +120,12 @@ public class DeliverySubsystem {
         deliveryRightPID.setIZone(iZone);
         deliveryRightPID.setFF(f);
         deliveryRightPID.setOutputRange(min, max);
-        
-    
+
+    }
+
+    public void setSpeed(double speed) {
+        mDeliveryRight.set(speed);
+        mDeliveryLeft.set(speed);
     }
 }
 

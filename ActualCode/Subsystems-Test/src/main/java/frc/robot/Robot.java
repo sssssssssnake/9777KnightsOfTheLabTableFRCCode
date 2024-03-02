@@ -23,9 +23,10 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   HardwareSoftware robot  = new HardwareSoftware();
 
-
   
-
+  
+  
+  
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -36,6 +37,13 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+    // SmartDashboard.putNumber("P", .01);
+    // SmartDashboard.putNumber("I", 0);
+    // SmartDashboard.putNumber("D", 0);
+    // SmartDashboard.putNumber("I Zone", 0);
+    // SmartDashboard.putNumber("F", 0);
+    // SmartDashboard.putNumber("Max", 0);
+    // SmartDashboard.putNumber("Min", 0);
   }
 
   /**
@@ -82,30 +90,37 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
+    double[] funPIDNumber = new double[7];
+  
+    funPIDNumber[0] = .01;
+    robot.delivery.constantChange(funPIDNumber[0], funPIDNumber[1], funPIDNumber[2], funPIDNumber[3], funPIDNumber[4], funPIDNumber[5], funPIDNumber[6]);
     
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    double[] funPIDNumber = new double[7];
-    funPIDNumber[0] = SmartDashboard.getNumber("P", 0);
-    funPIDNumber[1] = SmartDashboard.getNumber("I", 0);
-    funPIDNumber[2] = SmartDashboard.getNumber("D", 0);
-    funPIDNumber[3] = SmartDashboard.getNumber("I Zone", 0);
-    funPIDNumber[4] = SmartDashboard.getNumber("F", 0);
-    funPIDNumber[5] = SmartDashboard.getNumber("Max", 0);
-    funPIDNumber[6] = SmartDashboard.getNumber("Min", 0);
-    robot.delivery.constantChange(funPIDNumber[0], funPIDNumber[1], funPIDNumber[2], funPIDNumber[3], funPIDNumber[4], funPIDNumber[5], funPIDNumber[6]);
+    // funPIDNumber[0] = SmartDashboard.getNumber("P", .01);
+    // funPIDNumber[1] = SmartDashboard.getNumber("I", 0);
+    // funPIDNumber[2] = SmartDashboard.getNumber("D", 0);
+    // funPIDNumber[3] = SmartDashboard.getNumber("I Zone", 0);
+    // funPIDNumber[4] = SmartDashboard.getNumber("F", 0);
+    // funPIDNumber[5] = SmartDashboard.getNumber("Max", 0);
+    // funPIDNumber[6] = SmartDashboard.getNumber("Min", 0);
     
-    if (controller.getAButton()) {
-      robot.intake.setIntakeSpeed(0.5);
-    }else if (controller.getBButton()) {
-      robot.intake.setIntakeSpeed(-0.5);
-    } else if (controller.getRightBumper()) {
-      robot.delivery.deliver(100);
+    // if (controller.getAButton()) {
+    //   robot.intake.setIntakeSpeed(0.5);
+    // }else if (controller.getBButton()) {
+    //   robot.intake.setIntakeSpeed(-0.5);
+    // } else 
+    if (controller.getRightBumper()) {
+      // robot.delivery.deliver(100);
+      robot.delivery.mDeliveryLeft.set(1);
+      robot.delivery.mDeliveryRight.set(-1);
     } else if (controller.getLeftBumper()) {
-      robot.delivery.deliver(-100);
+      // robot.delivery.deliver(-100);
+      robot.delivery.mDeliveryLeft.set(-1);
+      robot.delivery.mDeliveryRight.set(1);
     } 
     else {
       robot.intake.stop();
