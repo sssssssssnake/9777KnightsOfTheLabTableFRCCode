@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.autonomousCommands.AutoUpdate;
 import frc.robot.teleopSwerve.DriveManipulation;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -23,6 +24,9 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   public static XboxController controller = new XboxController(0);
   private DriveManipulation drive = new DriveManipulation(controller);
+  
+  Thread autoUpdate = new Thread(new AutoUpdate(0, 10, 0));
+  boolean runAsync = true;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -48,6 +52,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("frontRight", HardThenSoft.frontRight.basicTurnEncoder.getAbsolutePosition().getValueAsDouble());
     SmartDashboard.putNumber("backLeft", HardThenSoft.backLeft.basicTurnEncoder.getAbsolutePosition().getValueAsDouble());
     SmartDashboard.putNumber("backRight", HardThenSoft.backRight.basicTurnEncoder.getAbsolutePosition().getValueAsDouble());
+
   }
 
   /**
@@ -76,14 +81,22 @@ public class Robot extends TimedRobot {
         break;
       case kDefaultAuto:
       default:
-        // Put default auto code here
+      // Put default auto code here
+        if (runAsync) {
+          autoUpdate.start();
+          runAsync = false;
+        }
         break;
     }
+
+    
   }
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    // autoUpdate.interrupt();
+  }
 
   /** This function is called periodically during operator control. */
   @Override
