@@ -4,10 +4,14 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.autonomousCommands.AutoUpdate;
+import frc.robot.autonomousCommands.RunOuttakeAuto;
 import frc.robot.teleopSwerve.DriveManipulation;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -26,8 +30,9 @@ public class Robot extends TimedRobot {
   private DriveManipulation drive = new DriveManipulation(controller);
   double frontRightDriveEncoderNumber = 0;
   
-  Thread autoUpdate = new Thread(new AutoUpdate(0, 90, Math.PI));
-  boolean runAsync = true;
+  List<Thread> autonomoustCommands = new ArrayList<Thread>();
+  public static boolean runAsync = true;
+  int counterforAsync = 0;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -73,6 +78,18 @@ public class Robot extends TimedRobot {
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
+    switch (m_autoSelected) {
+      case kCustomAuto:
+        
+        break;
+      case kDefaultAuto:
+        autonomoustCommands.add(new Thread(new AutoUpdate(0, 25, 0)));
+        autonomoustCommands.add(new Thread(new AutoUpdate(-150, 0, Math.PI)));
+        autonomoustCommands.add(new Thread(new RunOuttakeAuto()));
+        break; 
+      default:
+        break;
+    }
   }
 
   /** This function is called periodically during autonomous. */
@@ -86,7 +103,7 @@ public class Robot extends TimedRobot {
       default:
       // Put default auto code here
         if (runAsync) {
-          autoUpdate.start();
+          autonomoustCommands.get(counterforAsync++).start();
           runAsync = false;
         }
         break;

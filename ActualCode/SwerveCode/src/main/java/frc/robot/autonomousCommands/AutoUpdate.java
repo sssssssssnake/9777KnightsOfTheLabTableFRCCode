@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.HardThenSoft;
+import frc.robot.Robot;
 import frc.robot.autonomousCommands.RunToState;
 
 
@@ -228,6 +229,7 @@ public class AutoUpdate implements Runnable{
 
 
         HardThenSoft.autoThreadRunning = false;
+        Robot.runAsync = true;
 
     }
     
