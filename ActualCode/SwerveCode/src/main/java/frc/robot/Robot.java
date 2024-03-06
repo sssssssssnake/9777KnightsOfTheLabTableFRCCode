@@ -24,8 +24,9 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   public static XboxController controller = new XboxController(0);
   private DriveManipulation drive = new DriveManipulation(controller);
+  double frontRightDriveEncoderNumber = 0;
   
-  Thread autoUpdate = new Thread(new AutoUpdate(0, 10, 0));
+  Thread autoUpdate = new Thread(new AutoUpdate(0, 90, Math.PI));
   boolean runAsync = true;
 
   /**
@@ -37,6 +38,7 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+    frontRightDriveEncoderNumber = HardThenSoft.frontRightDriveEncoder.getPosition();
   }
 
   /**
@@ -53,6 +55,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("backLeft", HardThenSoft.backLeft.basicTurnEncoder.getAbsolutePosition().getValueAsDouble());
     SmartDashboard.putNumber("backRight", HardThenSoft.backRight.basicTurnEncoder.getAbsolutePosition().getValueAsDouble());
 
+    SmartDashboard.putNumber("frontLeftDrive Stuff", HardThenSoft.frontRightDriveEncoder.getPosition() - frontRightDriveEncoderNumber);
   }
 
   /**
@@ -96,6 +99,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     // autoUpdate.interrupt();
+    HardThenSoft.killAllAsync = true;
+    HardThenSoft.autoThreadRunning = false;
   }
 
   /** This function is called periodically during operator control. */
