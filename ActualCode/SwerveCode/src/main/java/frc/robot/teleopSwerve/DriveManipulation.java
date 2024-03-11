@@ -135,7 +135,7 @@ public class DriveManipulation {
                 swerveModuleSpeeds[i] = Math.sqrt(finalVector[i][0] * finalVector[i][0] + finalVector[i][1] * finalVector[i][1]);
             }}
     }
-    public void runToState() {
+    public void runToState(boolean precisionMode) {
         frontLeft.setDesiredAngle(swerveModuleAngles[0]);
         frontRight.setDesiredAngle(swerveModuleAngles[1]);
         backLeft.setDesiredAngle(swerveModuleAngles[2]);
@@ -146,11 +146,46 @@ public class DriveManipulation {
         backLeft.runToState();
         backRight.runToState();
     
+        double sum = 0;
+        double avg = 0;
+        
+        
         // now we can set the speeds
-        frontLeftDrive.set(swerveModuleSpeeds[0]  * .5);
-        frontRightDrive.set(swerveModuleSpeeds[1] * .5);
-        backLeftDrive.set(swerveModuleSpeeds[2]   * .5);
-        backRightDrive.set(swerveModuleSpeeds[3]  * .5);
+
+        //average the speeds to each of the motors
+        for(int i = 0; i < swerveModuleSpeeds.length; i++){  
+            //getting elements from the list and adding to the variable sum   
+            sum = sum + swerveModuleSpeeds[i];  
+            //finds the average of the list  
+            avg = sum / swerveModuleSpeeds.length;   
+
+        }
+
+
+        //Apply power deadband to keep motors from coasting
+        if(Math.abs(avg) < .1){
+            frontLeftDrive.stopMotor();
+            frontRightDrive.stopMotor();
+            backLeftDrive.stopMotor();
+            backRightDrive.stopMotor();
+        }else{
+            if(precisionMode){
+                frontLeftDrive.set (swerveModuleSpeeds[0] * .2);
+                frontRightDrive.set(swerveModuleSpeeds[1] * .2);
+                backLeftDrive.set  (swerveModuleSpeeds[2] * .2);
+                backRightDrive.set (swerveModuleSpeeds[3] * .2);
+
+            }else{
+                frontLeftDrive.set (swerveModuleSpeeds[0]);
+                frontRightDrive.set(swerveModuleSpeeds[1]);
+                backLeftDrive.set  (swerveModuleSpeeds[2]);
+                backRightDrive.set (swerveModuleSpeeds[3]);
+
+            }
+
+        }
+
+
     }
 
 }

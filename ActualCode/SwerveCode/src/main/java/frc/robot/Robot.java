@@ -29,6 +29,7 @@ public class Robot extends TimedRobot {
   public static XboxController controller = new XboxController(0);
   private DriveManipulation drive = new DriveManipulation(controller);
   double frontRightDriveEncoderNumber = 0;
+  boolean precisionMode = false;
   
   List<Thread> autonomoustCommands = new ArrayList<Thread>();
   public static boolean runAsync = true;
@@ -124,12 +125,13 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     drive.setNewCenterState();
-    drive.runToState();
+    drive.runToState(precisionMode);
 
-    if (controller.getAButton()) { 
-      HardThenSoft.mDeliveryLeft.set(1);
-      HardThenSoft.mDeliveryRight.set(-1);
-    } else if (controller.getYButton()) {
+    if (controller.getAButtonReleased()) { 
+      precisionMode = !precisionMode;
+    } 
+    
+    if (controller.getYButton()) {
       HardThenSoft.mDeliveryLeft.set(-1);
       HardThenSoft.mDeliveryRight.set(1);
     } else {
