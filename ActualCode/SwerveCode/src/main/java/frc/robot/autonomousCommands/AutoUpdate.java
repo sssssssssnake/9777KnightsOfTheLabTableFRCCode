@@ -46,7 +46,7 @@ public class AutoUpdate implements Runnable{
 
     public AutoUpdate(double x, double y, double rotation) {
         newX = x;
-        newY = y;
+        newY = -y;
         newRotation = rotation;
 
         // originalX = HardThenSoft.frontLeftDriveEncoder.getPosition();
@@ -161,68 +161,69 @@ public class AutoUpdate implements Runnable{
         HardThenSoft.backRightDrive.setIdleMode(IdleMode.kCoast);
         
         // now we can rotate the robot
+        if (newRotation != 0) {
+            // we are given the angle we want to rotate to, so we needc to calculate the distance the motor needs to go when rotoating
+            double rotationDistance = newRotation * radius;
 
-        // we are given the angle we want to rotate to, so we needc to calculate the distance the motor needs to go when rotoating
-        double rotationDistance = newRotation * radius;
+            // now we just set the rotation of the motors with a new thread
+            HardThenSoft.killAllAsync = false;
+            Thread rotate = new Thread(new RunToState(constantRotationAngle));
+            rotate.start();
 
-        // now we just set the rotation of the motors with a new thread
-        HardThenSoft.killAllAsync = false;
-        Thread rotate = new Thread(new RunToState(constantRotationAngle));
-        rotate.start();
-
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        HardThenSoft.frontLeftDrive.setIdleMode(IdleMode.kBrake);
-        HardThenSoft.frontRightDrive.setIdleMode(IdleMode.kBrake);
-        HardThenSoft.backLeftDrive.setIdleMode(IdleMode.kBrake);
-        HardThenSoft.backRightDrive.setIdleMode(IdleMode.kBrake);
-
-
-        currentEncoderValue = HardThenSoft.frontLeftDriveEncoder.getPosition();
-        newEncoderValue = currentEncoderValue + centimetersToEncoders(rotationDistance);
-
-        while (newEncoderValue - currentEncoderValue > .5 && isgoodToGo && HardThenSoft.autoThreadRunning) {
-            if (Math.abs(currentEncoderValue - newEncoderValue) > xGate) {
-                HardThenSoft.frontLeftDrive.set( goSpeed);
-                HardThenSoft.frontRightDrive.set(goSpeed);
-                HardThenSoft.backLeftDrive.set(  goSpeed);
-                HardThenSoft.backRightDrive.set( goSpeed);
-            } else {
-                HardThenSoft.frontLeftDrive.set( Math.abs(newEncoderValue - currentEncoderValue) / xGate * goSpeed);
-                HardThenSoft.frontRightDrive.set(Math.abs(newEncoderValue - currentEncoderValue) / xGate * goSpeed);
-                HardThenSoft.backLeftDrive.set(  Math.abs(newEncoderValue - currentEncoderValue) / xGate * goSpeed);
-                HardThenSoft.backRightDrive.set( Math.abs(newEncoderValue - currentEncoderValue) / xGate * goSpeed);
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            
+
+            HardThenSoft.frontLeftDrive.setIdleMode(IdleMode.kBrake);
+            HardThenSoft.frontRightDrive.setIdleMode(IdleMode.kBrake);
+            HardThenSoft.backLeftDrive.setIdleMode(IdleMode.kBrake);
+            HardThenSoft.backRightDrive.setIdleMode(IdleMode.kBrake);
+
+
             currentEncoderValue = HardThenSoft.frontLeftDriveEncoder.getPosition();
+            newEncoderValue = currentEncoderValue + centimetersToEncoders(rotationDistance);
 
-            SmartDashboard.putNumber("Current Encoder Value", currentEncoderValue);
-            SmartDashboard.putNumber("New Encoder Value", newEncoderValue);
-            SmartDashboard.putNumber("Angle From Position", angleFromPosition * 180 / Math.PI);
+            while (newEncoderValue - currentEncoderValue > .5 && isgoodToGo && HardThenSoft.autoThreadRunning) {
+                if (Math.abs(currentEncoderValue - newEncoderValue) > xGate) {
+                    HardThenSoft.frontLeftDrive.set( goSpeed);
+                    HardThenSoft.frontRightDrive.set(goSpeed);
+                    HardThenSoft.backLeftDrive.set(  goSpeed);
+                    HardThenSoft.backRightDrive.set( goSpeed);
+                } else {
+                    HardThenSoft.frontLeftDrive.set( Math.abs(newEncoderValue - currentEncoderValue) / xGate * goSpeed);
+                    HardThenSoft.frontRightDrive.set(Math.abs(newEncoderValue - currentEncoderValue) / xGate * goSpeed);
+                    HardThenSoft.backLeftDrive.set(  Math.abs(newEncoderValue - currentEncoderValue) / xGate * goSpeed);
+                    HardThenSoft.backRightDrive.set( Math.abs(newEncoderValue - currentEncoderValue) / xGate * goSpeed);
+                }
+                
+                currentEncoderValue = HardThenSoft.frontLeftDriveEncoder.getPosition();
+
+                SmartDashboard.putNumber("Current Encoder Value", currentEncoderValue);
+                SmartDashboard.putNumber("New Encoder Value", newEncoderValue);
+                SmartDashboard.putNumber("Angle From Position", angleFromPosition * 180 / Math.PI);
+            }
+
+            HardThenSoft.killAllAsync = true;
+
+            
+            HardThenSoft.frontLeftDrive.set(0);
+            HardThenSoft.frontRightDrive.set(0);
+            HardThenSoft.backLeftDrive.set(0);
+            HardThenSoft.backRightDrive.set(0);
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            HardThenSoft.frontLeftDrive.setIdleMode(IdleMode.kCoast);
+            HardThenSoft.frontRightDrive.setIdleMode(IdleMode.kCoast);
+            HardThenSoft.backLeftDrive.setIdleMode(IdleMode.kCoast);
+            HardThenSoft.backRightDrive.setIdleMode(IdleMode.kCoast);
         }
-
-        HardThenSoft.killAllAsync = true;
-
-        
-        HardThenSoft.frontLeftDrive.set(0);
-        HardThenSoft.frontRightDrive.set(0);
-        HardThenSoft.backLeftDrive.set(0);
-        HardThenSoft.backRightDrive.set(0);
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        HardThenSoft.frontLeftDrive.setIdleMode(IdleMode.kCoast);
-        HardThenSoft.frontRightDrive.setIdleMode(IdleMode.kCoast);
-        HardThenSoft.backLeftDrive.setIdleMode(IdleMode.kCoast);
-        HardThenSoft.backRightDrive.setIdleMode(IdleMode.kCoast);
 
         
 

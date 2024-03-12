@@ -7,6 +7,7 @@ package frc.robot;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.wpi.first.wpilibj.IterativeRobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -34,6 +35,10 @@ public class Robot extends TimedRobot {
   List<Thread> autonomoustCommands = new ArrayList<Thread>();
   public static boolean runAsync = true;
   int counterforAsync = 0;
+
+  public Robot() {
+    super(.05);
+  }
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -84,9 +89,9 @@ public class Robot extends TimedRobot {
         
         break;
       case kDefaultAuto:
-        autonomoustCommands.add(new Thread(new AutoUpdate(0, 25, 0)));
-        autonomoustCommands.add(new Thread(new AutoUpdate(-150, 0, Math.PI)));
-        autonomoustCommands.add(new Thread(new RunOuttakeAuto()));
+        autonomoustCommands.add(new Thread(new AutoUpdate(-120, -110, Math.PI)));
+        // autonomoustCommands.add(new Thread(new AutoUpdate(-150, 0, Math.PI)));
+        // autonomoustCommands.add(new Thread(new RunOuttakeAuto()));
         break; 
       default:
         break;
@@ -124,6 +129,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+
+    
+
     drive.setNewCenterState();
     drive.runToState(precisionMode);
 
@@ -131,17 +139,30 @@ public class Robot extends TimedRobot {
       precisionMode = !precisionMode;
     } 
     
-    if (controller.getYButton()) {
+    if (controller.getPOV() == 0) {
       HardThenSoft.mDeliveryLeft.set(-1);
       HardThenSoft.mDeliveryRight.set(1);
-    } else {
+      HardThenSoft.mIntake.set(.5);
+
+    } else if(controller.getPOV() == 90) {
+      HardThenSoft.mDeliveryLeft.set(-0.2);
+      HardThenSoft.mDeliveryRight.set(0.2);
+      HardThenSoft.mIntake.set(.5);
+
+    }else if(controller.getPOV() == 180) {
+      HardThenSoft.mDeliveryLeft.set(1);
+      HardThenSoft.mDeliveryRight.set(-1);
+    } else if(controller.getPOV() == -1) {
       HardThenSoft.mDelivery.stop();
+      HardThenSoft.mIntake.set(0);
+
+    
     }
 
-   if (controller.getBButton()) {
-      HardThenSoft.mIntake.set(-.5);
-    } else if (controller.getXButton()) {
-      HardThenSoft.mIntake.set(.5);
+   if (controller.getRightTriggerAxis() > .1) {
+      HardThenSoft.mIntake.set(controller.getRightTriggerAxis());
+    } else if (controller.getLeftTriggerAxis() > .1) {
+      HardThenSoft.mIntake.set(-controller.getLeftTriggerAxis());
     } else {
       HardThenSoft.mIntake.set(0);
     }
@@ -155,6 +176,10 @@ public class Robot extends TimedRobot {
     } else {
       HardThenSoft.mHangLeft.set(0);
       HardThenSoft.mHangRight.set(0);
+    }
+
+    if (controller.getBackButton()) {
+      HardThenSoft.gyroOffset = - HardThenSoft.navx.getAngle() / 180 * Math.PI;
     }
   }
 

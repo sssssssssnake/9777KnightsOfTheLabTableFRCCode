@@ -15,6 +15,8 @@ public class DriveManipulation {
     private double y;
     private double rotation;
 
+    boolean brakeRotation = false;
+
     // These are constants that needn't be changed by any code
 
     // offset for where motors are in radians
@@ -46,10 +48,11 @@ public class DriveManipulation {
     public DriveManipulation(XboxController getController) {
         controller = getController;
         swerveAngleOffset[0] += Math.PI / 4;
-        swerveAngleOffset[0] += 10 * Math.PI / 180;
-        swerveAngleOffset[1] -= 10 * Math.PI / 180;
+        swerveAngleOffset[0] += 25 * Math.PI / 180;
+        swerveAngleOffset[1] -= 22 * Math.PI / 180;
         swerveAngleOffset[2] += Math.PI / 8;
-        swerveAngleOffset[3] -=  10 * Math.PI / 180;
+        swerveAngleOffset[2] += 15 * Math.PI / 180;
+        swerveAngleOffset[3] -=  8 * Math.PI / 180;
     }
     public void setNewCenterState() {
         x        =  controller.getLeftX();
@@ -60,7 +63,7 @@ public class DriveManipulation {
         double oldY = y;
 
         double angleFromNavX = HardThenSoft.navx.getAngle() / 180 * Math.PI;
-        angleFromNavX += Math.PI;
+        angleFromNavX += Math.PI + HardThenSoft.gyroOffset;
         x = oldX * Math.cos(angleFromNavX) - oldY * Math.sin(angleFromNavX);
         y = oldX * Math.sin(angleFromNavX) + oldY * Math.cos(angleFromNavX);
 
@@ -77,37 +80,37 @@ public class DriveManipulation {
             // v_s
             double[][] newRotationVector = new double[4][2];
             double[][] constantRotationVector = new double[4][2];
-
+            
             // we need to get the x and y components of the rotation vector
             for (int i = 0; i < 4; i++) {
                 newRotationVector[i][0] = Math.cos(constantRotationAngle[i]);
                 newRotationVector[i][1] = Math.sin(constantRotationAngle[i]);
             }
-
+            
             // we then need to scale the rotation vector by the rotation value
             for (int i = 0; i < 4; i++) {
                 newRotationVector[i][0] *= rotation;
                 newRotationVector[i][1] *= rotation;
             }
-
+            
             // now that we have the two scaled and set vector arrays, we can add them together
-
+            
             // V_f
             double[][] finalVector = new double[4][2];
             for (int i = 0; i < 4; i++) {
                 finalVector[i][0] = positionVector[0] + newRotationVector[i][0];
                 finalVector[i][1] = positionVector[1] + newRotationVector[i][1];
             }
-
-            // now we can get the angle from the position vector
-            // for (int i = 0; i < 4; i++) {
-            //     // we dont use atan2 because we want to keep the angle between 0 and 2pi
-            //     if (finalVector[i][1] > 0) {
-            //         swerveModuleAngles[i] = Math.acos(finalVector[i][0] / Math.sqrt(finalVector[i][0] * finalVector[i][0] + finalVector[i][1] * finalVector[i][1]));
-            //     } else if (finalVector[i][1] < 0) {
-            //         swerveModuleAngles[i] = Math.PI * 2 - Math.acos(finalVector[i][0] / Math.sqrt(finalVector[i][0] * finalVector[i][0] + finalVector[i][1] * finalVector[i][1]));
-            //     } 
-            // }
+            
+            if (rotation < .1 && rotation > -.1) {
+                brakeRotation = false;
+            } else {
+                if (Math.sqrt(positionVector[0] * positionVector[0] + positionVector[1] * positionVector[1]) < .1) {
+                    brakeRotation = true;
+                } else {
+                    brakeRotation = false;
+                }
+            }
 
             // calculate the hypotenuse
             double hypotenuse = Math.sqrt(finalVector[0][0] * finalVector[0][0] + finalVector[0][1] * finalVector[0][1]);
@@ -161,6 +164,18 @@ public class DriveManipulation {
 
         }
 
+        if (brakeRotation) {
+            frontLeftDrive.setIdleMode(CANSparkFlex.IdleMode.kBrake);
+            frontRightDrive.setIdleMode(CANSparkFlex.IdleMode.kBrake);
+            backLeftDrive.setIdleMode(CANSparkFlex.IdleMode.kBrake);
+            backRightDrive.setIdleMode(CANSparkFlex.IdleMode.kBrake);
+        } else {
+            frontLeftDrive.setIdleMode(CANSparkFlex.IdleMode.kCoast);
+            frontRightDrive.setIdleMode(CANSparkFlex.IdleMode.kCoast);
+            backLeftDrive.setIdleMode(CANSparkFlex.IdleMode.kCoast);
+            backRightDrive.setIdleMode(CANSparkFlex.IdleMode.kCoast);
+        }
+
 
         //Apply power deadband to keep motors from coasting
         if(Math.abs(avg) < .1){
@@ -175,11 +190,17 @@ public class DriveManipulation {
                 backLeftDrive.set  (swerveModuleSpeeds[2] * .2);
                 backRightDrive.set (swerveModuleSpeeds[3] * .2);
 
+
             }else{
-                frontLeftDrive.set (swerveModuleSpeeds[0]);
-                frontRightDrive.set(swerveModuleSpeeds[1]);
-                backLeftDrive.set  (swerveModuleSpeeds[2]);
-                backRightDrive.set (swerveModuleSpeeds[3]);
+                frontLeftDrive.set (swerveModuleSpeeds[0] * .7);
+                frontRightDrive.set(swerveModuleSpeeds[1] * .7);
+                backLeftDrive.set  (swerveModuleSpeeds[2] * .7);
+                backRightDrive.set (swerveModuleSpeeds[3] * .7);
+
+                frontLeftDrive.setIdleMode(CANSparkFlex.IdleMode.kCoast);
+                frontRightDrive.setIdleMode(CANSparkFlex.IdleMode.kCoast);
+                backLeftDrive.setIdleMode(CANSparkFlex.IdleMode.kCoast);
+                backRightDrive.setIdleMode(CANSparkFlex.IdleMode.kCoast);
 
             }
 

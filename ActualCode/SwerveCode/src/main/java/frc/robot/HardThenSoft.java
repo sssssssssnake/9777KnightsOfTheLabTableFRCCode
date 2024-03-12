@@ -50,4 +50,11 @@ public class HardThenSoft {
 
     public static boolean autoThreadRunning = false;
 
+    public static double gyroOffset = 0.0;
+
+    public HardThenSoft() {
+        mHangLeft.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        mHangRight.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    }
+
 }
