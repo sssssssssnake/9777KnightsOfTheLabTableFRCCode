@@ -230,8 +230,12 @@ public class AutoUpdate implements Runnable{
 
 
         HardThenSoft.autoThreadRunning = false;
-        Robot.runAsync = true;
 
+        if (!HardThenSoft.intakeRunning) {
+            Robot.runAsync = true;
+        } else {
+            Robot.runAsync = false;
+        }
     }
     
     public void setNewPosition(double x, double y, double rotation) {

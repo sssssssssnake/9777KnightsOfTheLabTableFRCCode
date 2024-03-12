@@ -47,8 +47,8 @@ public class HardThenSoft {
     public static DeliverySubsystem mDelivery = new DeliverySubsystem();
 
     public static boolean killAllAsync = false;
-
     public static boolean autoThreadRunning = false;
+    public static boolean intakeRunning = false;
 
     public static double gyroOffset = 0.0;
 
