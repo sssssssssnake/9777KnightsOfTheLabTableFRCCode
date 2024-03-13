@@ -15,6 +15,9 @@ import frc.robot.autonomousCommands.AutoUpdate;
 import frc.robot.autonomousCommands.RunOuttakeAuto;
 import frc.robot.teleopSwerve.DriveManipulation;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import com.revrobotics.CANSparkMax;
 
 
@@ -33,7 +36,11 @@ public class Robot extends TimedRobot {
   private DriveManipulation drive = new DriveManipulation(controller);
   double frontRightDriveEncoderNumber = 0;
   boolean precisionMode = false;
-  
+
+  boolean autoAlign = false;
+  double[] specialAlignmentNumbers = new double[3];
+
+
   List<Thread> autonomoustCommands = new ArrayList<Thread>();
   public static boolean runAsync = true;
   int counterforAsync = 0;
@@ -69,6 +76,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("backRight", HardThenSoft.backRight.basicTurnEncoder.getAbsolutePosition().getValueAsDouble());
 
     SmartDashboard.putNumber("frontLeftDrive Stuff", HardThenSoft.frontRightDriveEncoder.getPosition() - frontRightDriveEncoderNumber);
+    SmartDashboard.putNumber("miracleMagicX", specialAlignmentNumbers[0]);
+    SmartDashboard.putNumber("miracleMagicY", specialAlignmentNumbers[1]);
+    SmartDashboard.putNumber("miracleMagicZ", specialAlignmentNumbers[2]);
   }
 
   /**
@@ -141,53 +151,91 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
+
+    if(controller.getYButtonReleased()){
+      autoAlign = true;
+    }
+
+    if(!autoAlign){
+
+      //Control the swerve drive
+      drive.setNewCenterState();
+      drive.runToState(precisionMode);
+
+      //Enable/Disable Precision Drive Mode
+      if (controller.getAButtonReleased()) { 
+        precisionMode = !precisionMode;
+      } 
+      
+      //Control the Delivery System
+      if (controller.getPOV() == 0) {
+        HardThenSoft.mDeliveryLeft.set(-1);
+        HardThenSoft.mDeliveryRight.set(1);
+        HardThenSoft.mIntake.set(.5);
+      } 
+      
+      else if(controller.getPOV() == 90) {
+        HardThenSoft.mDeliveryLeft.set(-0.2475);
+        HardThenSoft.mDeliveryRight.set(0.17);
+        HardThenSoft.mIntake.set(.5);
+      }
+      
+      else if(controller.getPOV() == 180) {
+        HardThenSoft.mDeliveryLeft.set(1);
+        HardThenSoft.mDeliveryRight.set(-1);
+      } 
+      
+      else if(controller.getPOV() == -1) {
+        HardThenSoft.mDelivery.stop();
+        HardThenSoft.mIntake.set(0);
+      }
+
+      //Control the Intake
+      if (controller.getRightTriggerAxis() > .1) {
+        HardThenSoft.mIntake.set(controller.getRightTriggerAxis());
+      } 
+      
+      else if (controller.getLeftTriggerAxis() > .1) {
+        HardThenSoft.mIntake.set(-controller.getLeftTriggerAxis());
+      } 
+      
+      else {
+        HardThenSoft.mIntake.set(0);
+      }
+
+      //Control the Hang System
+      if (controller.getLeftBumper()) {
+        HardThenSoft.mHangLeft.set(-.5);
+        HardThenSoft.mHangRight.set(.5);
+      } 
+      
+      else if (controller.getRightBumper()) {
+        HardThenSoft.mHangLeft.set(.5);
+        HardThenSoft.mHangRight.set(-.5);
+      } 
+      
+      else {
+        HardThenSoft.mHangLeft.set(0);
+        HardThenSoft.mHangRight.set(0);
+      }
+
+      if (controller.getBackButton()) {
+        HardThenSoft.gyroOffset = - HardThenSoft.navx.getAngle() / 180 * Math.PI;
+      }
+
+      if (controller.getStartButton()) {
+        specialAlignmentNumbers = cameraLogic.CameraLogic.postXYZ();
+      }
+
+    }
     
+    //Automatic Alignment Control
+    else{
 
-    drive.setNewCenterState();
-    drive.runToState(precisionMode);
 
-    if (controller.getAButtonReleased()) { 
-      precisionMode = !precisionMode;
-    } 
+    }
+
     
-    if (controller.getPOV() == 0) {
-      HardThenSoft.mDeliveryLeft.set(-1);
-      HardThenSoft.mDeliveryRight.set(1);
-      HardThenSoft.mIntake.set(.5);
-    } else if(controller.getPOV() == 90) {
-      HardThenSoft.mDeliveryLeft.set(-0.2475);
-      HardThenSoft.mDeliveryRight.set(0.17);
-      HardThenSoft.mIntake.set(.5);
-    }else if(controller.getPOV() == 180) {
-      HardThenSoft.mDeliveryLeft.set(1);
-      HardThenSoft.mDeliveryRight.set(-1);
-    } else if(controller.getPOV() == -1) {
-      HardThenSoft.mDelivery.stop();
-      HardThenSoft.mIntake.set(0);
-    }
-
-   if (controller.getRightTriggerAxis() > .1) {
-      HardThenSoft.mIntake.set(controller.getRightTriggerAxis());
-    } else if (controller.getLeftTriggerAxis() > .1) {
-      HardThenSoft.mIntake.set(-controller.getLeftTriggerAxis());
-    } else {
-      HardThenSoft.mIntake.set(0);
-    }
-
-    if (controller.getLeftBumper()) {
-      HardThenSoft.mHangLeft.set(-.5);
-      HardThenSoft.mHangRight.set(.5);
-    } else if (controller.getRightBumper()) {
-      HardThenSoft.mHangLeft.set(.5);
-      HardThenSoft.mHangRight.set(-.5);
-    } else {
-      HardThenSoft.mHangLeft.set(0);
-      HardThenSoft.mHangRight.set(0);
-    }
-
-    if (controller.getBackButton()) {
-      HardThenSoft.gyroOffset = - HardThenSoft.navx.getAngle() / 180 * Math.PI;
-    }
   }
 
   /** This function is called once when the robot is disabled. */
