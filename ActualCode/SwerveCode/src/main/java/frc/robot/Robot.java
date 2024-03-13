@@ -15,6 +15,8 @@ import frc.robot.autonomousCommands.AutoUpdate;
 import frc.robot.autonomousCommands.RunOuttakeAuto;
 import frc.robot.teleopSwerve.DriveManipulation;
 import edu.wpi.first.wpilibj.XboxController;
+import com.revrobotics.CANSparkMax;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -89,9 +91,9 @@ public class Robot extends TimedRobot {
         
         break;
       case kDefaultAuto:
-        autonomoustCommands.add(new Thread(new AutoUpdate(-120, -110, Math.PI)));
+        autonomoustCommands.add(new Thread(new AutoUpdate(160, 10, Math.PI - (20 * Math.PI/180))));
         // autonomoustCommands.add(new Thread(new AutoUpdate(-150, 0, Math.PI)));
-        // autonomoustCommands.add(new Thread(new RunOuttakeAuto()));
+        autonomoustCommands.add(new Thread(new RunOuttakeAuto()));
         break; 
       default:
         break;
@@ -121,9 +123,18 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    // autoUpdate.interrupt();
     HardThenSoft.killAllAsync = true;
     HardThenSoft.autoThreadRunning = false;
+
+    HardThenSoft.mHangLeft.setIdleMode( CANSparkMax.IdleMode.kBrake);
+    HardThenSoft.mHangRight.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
+    HardThenSoft.frontLeftDrive.setIdleMode( CANSparkMax.IdleMode.kBrake);
+    HardThenSoft.frontRightDrive.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    HardThenSoft.backLeftDrive.setIdleMode(  CANSparkMax.IdleMode.kBrake);
+    HardThenSoft.backRightDrive.setIdleMode( CANSparkMax.IdleMode.kBrake);
+
+
   }
 
   /** This function is called periodically during operator control. */
@@ -143,20 +154,16 @@ public class Robot extends TimedRobot {
       HardThenSoft.mDeliveryLeft.set(-1);
       HardThenSoft.mDeliveryRight.set(1);
       HardThenSoft.mIntake.set(.5);
-
     } else if(controller.getPOV() == 90) {
-      HardThenSoft.mDeliveryLeft.set(-0.2);
-      HardThenSoft.mDeliveryRight.set(0.2);
+      HardThenSoft.mDeliveryLeft.set(-0.2475);
+      HardThenSoft.mDeliveryRight.set(0.17);
       HardThenSoft.mIntake.set(.5);
-
     }else if(controller.getPOV() == 180) {
       HardThenSoft.mDeliveryLeft.set(1);
       HardThenSoft.mDeliveryRight.set(-1);
     } else if(controller.getPOV() == -1) {
       HardThenSoft.mDelivery.stop();
       HardThenSoft.mIntake.set(0);
-
-    
     }
 
    if (controller.getRightTriggerAxis() > .1) {

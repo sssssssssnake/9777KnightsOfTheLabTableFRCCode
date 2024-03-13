@@ -163,7 +163,7 @@ public class DriveManipulation {
             avg = sum / swerveModuleSpeeds.length;   
 
         }
-
+        /* 
         if (brakeRotation) {
             frontLeftDrive.setIdleMode(CANSparkFlex.IdleMode.kBrake);
             frontRightDrive.setIdleMode(CANSparkFlex.IdleMode.kBrake);
@@ -205,8 +205,20 @@ public class DriveManipulation {
             }
 
         }
+        */
 
+        if (precisionMode) {
+            power(.2, swerveModuleSpeeds);
+        } else {
+            power(.7, swerveModuleSpeeds);
+        }
 
     }
 
+    public void power(double multiplier, double[] speeds) {
+        HardThenSoft.frontLeftDrive.set(multiplier * speeds[0]);
+        HardThenSoft.frontRightDrive.set(multiplier * speeds[1]);
+        HardThenSoft.backLeftDrive.set(multiplier * speeds[2]);
+        HardThenSoft.backRightDrive.set(multiplier * speeds[3]);
+    }
 }

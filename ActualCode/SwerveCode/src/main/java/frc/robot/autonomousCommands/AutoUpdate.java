@@ -16,8 +16,8 @@ public class AutoUpdate implements Runnable{
     // public double originalY;
     // public double originalRotation;
 
-    double xGate = 5;
-    double goSpeed = .2;
+    double xGate = 7;
+    double goSpeed = .3;
     double conversionRate = 4.17;
     double radius = 42.4264069;
 
