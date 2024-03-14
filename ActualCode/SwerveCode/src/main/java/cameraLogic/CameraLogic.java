@@ -32,7 +32,9 @@ public final class CameraLogic {
     public static void autoAlign(){
 
         NetworkTableEntry id = camera.getEntry("tid");
-
+        if (updatedTargetPos[0] == 0.0) {
+            return;
+        }
         switch ((int)id.getDouble(0.0)) {
             //Red and Blue Speaker
             case 7:

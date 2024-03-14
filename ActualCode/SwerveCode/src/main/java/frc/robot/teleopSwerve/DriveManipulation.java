@@ -20,7 +20,12 @@ public class DriveManipulation {
     // These are constants that needn't be changed by any code
 
     // offset for where motors are in radians
-    private double[] swerveAngleOffset = {Math.PI / 2,- Math.PI / 4, Math.PI / 2 , 3 * Math.PI / 4};
+    private double[] swerveAngleOffset = {
+        107 * (Math.PI /180),
+        -53 * (Math.PI /180),
+        -65 * (Math.PI /180),
+        -55 * (Math.PI /180),
+    };
     
     /**
      * If the robot rotates, there are different angles that t he robot uses to rotate.
@@ -47,12 +52,7 @@ public class DriveManipulation {
 
     public DriveManipulation(XboxController getController) {
         controller = getController;
-        swerveAngleOffset[0] += Math.PI / 4;
-        swerveAngleOffset[0] += 13 * Math.PI / 180;
-        swerveAngleOffset[1] -= 22 * Math.PI / 180;
-        swerveAngleOffset[2] += Math.PI / 8;
-        swerveAngleOffset[2] += 30 * Math.PI / 180;
-        swerveAngleOffset[3] -=  8 * Math.PI / 180;
+
     }
     public void setNewCenterState() {
         x        =  controller.getLeftX();

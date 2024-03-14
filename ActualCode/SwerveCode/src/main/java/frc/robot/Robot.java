@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.autonomousCommands.AutoUpdate;
+import frc.robot.autonomousCommands.PositionThread;
 import frc.robot.autonomousCommands.RunOuttakeAuto;
 import frc.robot.teleopSwerve.DriveManipulation;
 import edu.wpi.first.wpilibj.XboxController;
@@ -99,7 +100,7 @@ public class Robot extends TimedRobot {
         
         break;
       case kDefaultAuto:
-        autonomoustCommands.add(new Thread(new AutoUpdate(0, 80, Math.PI)));
+        autonomoustCommands.add(new Thread(new PositionThread(0, 0, Math.PI)));
         // autonomoustCommands.add(new Thread(new AutoUpdate(-150, 0, Math.PI)));
         // autonomoustCommands.add(new Thread(new RunOuttakeAuto()));
         break; 
@@ -163,15 +164,10 @@ public class Robot extends TimedRobot {
       //Control the swerve drive
       drive.setNewCenterState();
       drive.runToState(precisionMode);
-
-
-
       //Enable/Disable Precision Drive Mode
       if (controller.getAButtonReleased()) { 
         precisionMode = !precisionMode;
-      } 
-      
-      
+      }
 
       //Control the Delivery System
       if (controller.getPOV() == 0) {
@@ -222,29 +218,23 @@ public class Robot extends TimedRobot {
         HardThenSoft.mHangRight.set(0);
       }
 
-
-
-
       if (controller.getBackButton()) {
         HardThenSoft.gyroOffset = - HardThenSoft.navx.getAngle() / 180 * Math.PI;
       }
 
-
-
-
-
-
-      if (controller.getStartButton()) {
-        specialAlignmentNumbers = cameraLogic.CameraLogic.postXYZ();
-      }
-
-    }
-    //Automatic Alignment Control
+      
+    } //Automatic Alignment Control
     else if(!HardThenSoft.autoThreadRunning){
       CameraLogic.autoAlign();
       autoAlign = false;
     }
-
+    
+    if (controller.getStartButton()) {
+      specialAlignmentNumbers = cameraLogic.CameraLogic.postXYZ();
+      HardThenSoft.killAllAsync = true;
+      HardThenSoft.autoThreadRunning = false;
+    }
+    
     
   }
 
