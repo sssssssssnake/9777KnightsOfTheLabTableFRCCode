@@ -16,9 +16,9 @@ public class AutoUpdate implements Runnable{
     // public double originalY;
     // public double originalRotation;
 
-    double xGate = 7;
+    double xGate = 10;
     double goSpeed = .3;
-    double conversionRate = 4.17;
+    double conversionRate = 5;
     double radius = 42.4264069;
 
 
@@ -141,10 +141,6 @@ public class AutoUpdate implements Runnable{
         HardThenSoft.backLeftDrive.set(0);
         HardThenSoft.backRightDrive.set(0);
 
-        HardThenSoft.frontLeft.basicTurnMotor.set(0);
-        HardThenSoft.frontRight.basicTurnMotor.set(0);
-        HardThenSoft.backLeft.basicTurnMotor.set(0);
-        HardThenSoft.backRight.basicTurnMotor.set(0);
 
         try {
             Thread.sleep(1000);
@@ -152,13 +148,6 @@ public class AutoUpdate implements Runnable{
             e.printStackTrace();
         }
 
-
-        
-        
-        HardThenSoft.frontLeftDrive.setIdleMode(IdleMode.kCoast);
-        HardThenSoft.frontRightDrive.setIdleMode(IdleMode.kCoast);
-        HardThenSoft.backLeftDrive.setIdleMode(IdleMode.kCoast);
-        HardThenSoft.backRightDrive.setIdleMode(IdleMode.kCoast);
         
         // now we can rotate the robot
         if (newRotation != 0) {
@@ -203,6 +192,7 @@ public class AutoUpdate implements Runnable{
                 SmartDashboard.putNumber("Current Encoder Value", currentEncoderValue);
                 SmartDashboard.putNumber("New Encoder Value", newEncoderValue);
                 SmartDashboard.putNumber("Angle From Position", angleFromPosition * 180 / Math.PI);
+                SmartDashboard.putNumber("difference", newEncoderValue - currentEncoderValue);
             }
 
             HardThenSoft.killAllAsync = true;
@@ -219,10 +209,7 @@ public class AutoUpdate implements Runnable{
                 e.printStackTrace();
             }
 
-            HardThenSoft.frontLeftDrive.setIdleMode(IdleMode.kCoast);
-            HardThenSoft.frontRightDrive.setIdleMode(IdleMode.kCoast);
-            HardThenSoft.backLeftDrive.setIdleMode(IdleMode.kCoast);
-            HardThenSoft.backRightDrive.setIdleMode(IdleMode.kCoast);
+
         }
 
         
