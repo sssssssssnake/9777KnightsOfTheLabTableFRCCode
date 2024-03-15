@@ -127,15 +127,15 @@ public class PositionThread implements Runnable{
 
         while (Math.abs(angleDifference) > stopRadianError && !HardThenSoft.killAllAsync) {
             if (Math.abs(angleDifference) > rotationGate) {
-                HardThenSoft.frontLeftDrive.set( rotationGoSpeed * -findSign(angleDifference));
-                HardThenSoft.frontRightDrive.set(rotationGoSpeed * -findSign(angleDifference));
-                HardThenSoft.backLeftDrive.set(  rotationGoSpeed * -findSign(angleDifference));
-                HardThenSoft.backRightDrive.set( rotationGoSpeed * -findSign(angleDifference));
+                HardThenSoft.frontLeftDrive.set( rotationGoSpeed * findSign(angleDifference));
+                HardThenSoft.frontRightDrive.set(rotationGoSpeed * findSign(angleDifference));
+                HardThenSoft.backLeftDrive.set(  rotationGoSpeed * findSign(angleDifference));
+                HardThenSoft.backRightDrive.set( rotationGoSpeed * findSign(angleDifference));
             } else {
-                HardThenSoft.frontLeftDrive.set( rotationGoSpeed * (angleDifference / rotationGate) * -findSign(angleDifference));
-                HardThenSoft.frontRightDrive.set(rotationGoSpeed * (angleDifference / rotationGate) * -findSign(angleDifference));
-                HardThenSoft.backLeftDrive.set(  rotationGoSpeed * (angleDifference / rotationGate) * -findSign(angleDifference));
-                HardThenSoft.backRightDrive.set( rotationGoSpeed * (angleDifference / rotationGate) * -findSign(angleDifference));
+                HardThenSoft.frontLeftDrive.set( rotationGoSpeed * (angleDifference / rotationGate) * findSign(angleDifference));
+                HardThenSoft.frontRightDrive.set(rotationGoSpeed * (angleDifference / rotationGate) * findSign(angleDifference));
+                HardThenSoft.backLeftDrive.set(  rotationGoSpeed * (angleDifference / rotationGate) * findSign(angleDifference));
+                HardThenSoft.backRightDrive.set( rotationGoSpeed * (angleDifference / rotationGate) * findSign(angleDifference));
             }
 
             oldGyroValue = (HardThenSoft.navx.getAngle() * Math.PI / 180) + Math.PI;
