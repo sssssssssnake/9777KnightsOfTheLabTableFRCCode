@@ -78,6 +78,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("miracleMagicX", specialAlignmentNumbers[0]);
     SmartDashboard.putNumber("miracleMagicY", specialAlignmentNumbers[1]);
     SmartDashboard.putNumber("miracleMagicZ", specialAlignmentNumbers[2]);
+    SmartDashboard.putNumber("GyroRadians", HardThenSoft.navx.getAngle() * (Math.PI / 180) + Math.PI);
   }
 
   /**
@@ -100,7 +101,7 @@ public class Robot extends TimedRobot {
         
         break;
       case kDefaultAuto:
-        autonomoustCommands.add(new Thread(new PositionThread(0, 0, Math.PI)));
+        autonomoustCommands.add(new Thread(new PositionThread(0, 100, 1)));
         // autonomoustCommands.add(new Thread(new AutoUpdate(-150, 0, Math.PI)));
         // autonomoustCommands.add(new Thread(new RunOuttakeAuto()));
         break; 

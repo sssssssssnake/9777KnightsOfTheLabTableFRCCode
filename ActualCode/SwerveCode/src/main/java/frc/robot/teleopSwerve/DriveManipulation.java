@@ -57,7 +57,7 @@ public class DriveManipulation {
     public void setNewCenterState() {
         x        =  controller.getLeftX();
         y        = -controller.getLeftY();
-        rotation =  controller.getRightX();
+        rotation =  -controller.getRightX();
 
         double oldX = x;
         double oldY = y;
@@ -208,7 +208,7 @@ public class DriveManipulation {
         */
 
         if (precisionMode) {
-            power(.2, swerveModuleSpeeds);
+            power(.1, swerveModuleSpeeds);
         } else {
             power(.7, swerveModuleSpeeds);
         }

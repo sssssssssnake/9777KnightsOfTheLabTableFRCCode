@@ -121,27 +121,34 @@ public class PositionThread implements Runnable{
         startSetWheelAngles(constantRotationAngle);
         sleepyNightNight(300);
 
-        double oldGyroValue = (HardThenSoft.navx.getAngle() * Math.PI / 180) + Math.PI;
-        double newGyroValue = addAngle(oldGyroValue, newRotation);
-        double angleDifference = findBestAngleDifference(oldGyroValue, newGyroValue);
+        double currentGyroValue = HardThenSoft.navx.getAngle() * (Math.PI / 180)  + Math.PI;
+        currentGyroValue = zeroToTwoPI(currentGyroValue);
+        double setGyroAngle = currentGyroValue + newRotation;
+        setGyroAngle = zeroToTwoPI(setGyroAngle);
 
-        while (Math.abs(angleDifference) > stopRadianError && !HardThenSoft.killAllAsync) {
-            if (Math.abs(angleDifference) > rotationGate) {
-                HardThenSoft.frontLeftDrive.set( rotationGoSpeed * findSign(angleDifference));
-                HardThenSoft.frontRightDrive.set(rotationGoSpeed * findSign(angleDifference));
-                HardThenSoft.backLeftDrive.set(  rotationGoSpeed * findSign(angleDifference));
-                HardThenSoft.backRightDrive.set( rotationGoSpeed * findSign(angleDifference));
-            } else {
-                HardThenSoft.frontLeftDrive.set( rotationGoSpeed * (angleDifference / rotationGate) * findSign(angleDifference));
-                HardThenSoft.frontRightDrive.set(rotationGoSpeed * (angleDifference / rotationGate) * findSign(angleDifference));
-                HardThenSoft.backLeftDrive.set(  rotationGoSpeed * (angleDifference / rotationGate) * findSign(angleDifference));
-                HardThenSoft.backRightDrive.set( rotationGoSpeed * (angleDifference / rotationGate) * findSign(angleDifference));
-            }
+        // while (Math.abs(angleDifference) > stopRadianError && !HardThenSoft.killAllAsync) {
+        //     if (Math.abs(angleDifference) > rotationGate) {
+        //         HardThenSoft.frontLeftDrive.set( rotationGoSpeed * findSign(angleDifference));
+        //         HardThenSoft.frontRightDrive.set(rotationGoSpeed * findSign(angleDifference));
+        //         HardThenSoft.backLeftDrive.set(  rotationGoSpeed * findSign(angleDifference));
+        //         HardThenSoft.backRightDrive.set( rotationGoSpeed * findSign(angleDifference));
+        //     } else {
+        //         HardThenSoft.frontLeftDrive.set( rotationGoSpeed * (angleDifference / rotationGate) * findSign(angleDifference));
+        //         HardThenSoft.frontRightDrive.set(rotationGoSpeed * (angleDifference / rotationGate) * findSign(angleDifference));
+        //         HardThenSoft.backLeftDrive.set(  rotationGoSpeed * (angleDifference / rotationGate) * findSign(angleDifference));
+        //         HardThenSoft.backRightDrive.set( rotationGoSpeed * (angleDifference / rotationGate) * findSign(angleDifference));
+        //     }
 
-            oldGyroValue = (HardThenSoft.navx.getAngle() * Math.PI / 180) + Math.PI;
-            angleDifference = findBestAngleDifference(oldGyroValue, newGyroValue);
+        //     oldGyroValue = (HardThenSoft.navx.getAngle() * Math.PI / 180) + Math.PI;
+        //     angleDifference = findBestAngleDifference(oldGyroValue, newGyroValue);
             
-        }
+        // }
+        HardThenSoft.frontLeftDrive.set( .2);
+        HardThenSoft.frontRightDrive.set(.2);
+        HardThenSoft.backLeftDrive.set(  .2);
+        HardThenSoft.backRightDrive.set( .2);
+
+        sleepyNightNight(2000);
 
         // stop the robot
         HardThenSoft.killAllAsync = true;
@@ -180,7 +187,6 @@ public class PositionThread implements Runnable{
         runToState.start();
     }
 
-
     private double centimetersToEncoders(double centimeters) {
         return centimeters * (1 / conversionRate);
     }
@@ -193,18 +199,18 @@ public class PositionThread implements Runnable{
         }
     }
 
-    private double addAngle(double firstAngle, double secondAngle) {
-        double newAngle = firstAngle + secondAngle;
-        if (newAngle == 0) {
-            return firstAngle;
+    private double zeroToTwoPI(double angle) {
+        if (angle == 0) {
+            return 0;
         }
-        while (newAngle < 0) {
-            newAngle += Math.PI * 2;
+
+        while (angle > (Math.PI * 2)) {
+            angle -= Math.PI * 2;
         }
-        while (newAngle > Math.PI * 2) {
-            newAngle -= Math.PI * 2;
+        while (angle < 0) {
+            angle += Math.PI * 2;
         }
-        return newAngle;
+        return angle;
     }
 
     private double findBestAngleDifference(double firstAngle, double secondAngle) {
@@ -214,9 +220,7 @@ public class PositionThread implements Runnable{
             firstAngle - (secondAngle + Math.PI * 2),
             firstAngle - (secondAngle - Math.PI * 2)
         };
-
         int smallestDifference = 0;
-
         if (Math.abs(differences[0]) < Math.abs(differences[1]) && Math.abs(differences[0]) < Math.abs(differences[2])) {
             smallestDifference = 0;
         } else if (Math.abs(differences[1]) < Math.abs(differences[2]) && Math.abs(differences[1]) < Math.abs(differences[0])) {
@@ -228,16 +232,16 @@ public class PositionThread implements Runnable{
         return differences[smallestDifference];
     }
 
-    int findSign(double value) {
-        if (value == 0) {
-            return 0;
-        } else if (value <0) {
-            return -1;
-        } else if (value > 0) {
-            return 1;
-        } else {
-            return 1;
-        }
-    }
+    // int findSign(double value) {
+    //     if (value == 0) {
+    //         return 0;
+    //     } else if (value <0) {
+    //         return -1;
+    //     } else if (value > 0) {
+    //         return 1;
+    //     } else {
+    //         return 1;
+    //     }
+    // }
     
 }

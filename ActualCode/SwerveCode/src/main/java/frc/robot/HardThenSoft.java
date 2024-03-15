@@ -55,6 +55,12 @@ public class HardThenSoft {
     public HardThenSoft() {
         mHangLeft.setIdleMode(CANSparkMax.IdleMode.kBrake);
         mHangRight.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
+        frontLeftDrive.setSmartCurrentLimit(40);
+        frontRightDrive.setSmartCurrentLimit(40);
+        backLeftDrive.setSmartCurrentLimit(40);
+        backRightDrive.setSmartCurrentLimit(40);
+
     }
 
 }

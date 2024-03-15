@@ -15,6 +15,7 @@ public class TurnMotor {
 
     public TurnMotor(int getCanId, int getEncoderId){
         basicTurnMotor = new CANSparkFlex(getCanId, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
+        basicTurnMotor.setSmartCurrentLimit(40);
         basicTurnEncoder = new CANcoder(getEncoderId);
     
     }
