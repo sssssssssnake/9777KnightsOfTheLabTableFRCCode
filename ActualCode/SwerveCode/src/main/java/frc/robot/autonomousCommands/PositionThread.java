@@ -80,6 +80,7 @@ public class PositionThread implements Runnable{
         // new we want to drive there
 
         // set the wheel angles to the angle of the position
+        HardThenSoft.killAllAsync = false;
         startSetWheelAngles(angleFromPosition);
         sleepyNightNight(300);
 
@@ -118,6 +119,7 @@ public class PositionThread implements Runnable{
         }
         
         // set the wheel angles to the angle of the rotation
+        HardThenSoft.killAllAsync = false;
         startSetWheelAngles(constantRotationAngle);
         sleepyNightNight(300);
 
