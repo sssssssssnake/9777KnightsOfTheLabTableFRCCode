@@ -221,4 +221,11 @@ public class DriveManipulation {
         HardThenSoft.backLeftDrive.set(multiplier * speeds[2]);
         HardThenSoft.backRightDrive.set(multiplier * speeds[3]);
     }
+
+    public void stopDriveMOtors() {
+        HardThenSoft.frontLeftDrive.set(0);
+        HardThenSoft.frontRightDrive.set(0);
+        HardThenSoft.backLeftDrive.set(0);
+        HardThenSoft.backRightDrive.set(0);
+    }
 }

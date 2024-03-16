@@ -38,6 +38,7 @@ public class Robot extends TimedRobot {
 
   boolean autoAlign = false;
   double[] specialAlignmentNumbers = new double[3];
+  public boolean drivetrainControllteleop = true;
 
 
   List<Thread> autonomoustCommands = new ArrayList<Thread>();
@@ -101,9 +102,9 @@ public class Robot extends TimedRobot {
         
         break;
       case kDefaultAuto:
-        autonomoustCommands.add(new Thread(new PositionThread(0, 100, 1)));
+      autonomoustCommands.add(new Thread(new RunOuttakeAuto(true)));
+        autonomoustCommands.add(new Thread(new PositionThread(100, -150, Math.PI)));
         // autonomoustCommands.add(new Thread(new AutoUpdate(-150, 0, Math.PI)));
-        // autonomoustCommands.add(new Thread(new RunOuttakeAuto()));
         break; 
       default:
         break;
@@ -189,27 +190,33 @@ public class Robot extends TimedRobot {
         }
         HardThenSoft.mDeliveryLeft.set(-1);
         HardThenSoft.mDeliveryRight.set(1);
+        drivetrainControllteleop = false;
       } 
       else if(controller.getPOV() == 90) {
                 HardThenSoft.mIntake.set(-.5);
 
         HardThenSoft.mDeliveryLeft.set(-0.2475);
         HardThenSoft.mDeliveryRight.set(0.17);
+        drivetrainControllteleop = false;
       }
       else if(controller.getPOV() == 180) {
         HardThenSoft.mDeliveryLeft.set(1);
         HardThenSoft.mDeliveryRight.set(-1);
+        drivetrainControllteleop = false;
       }
       else{
         HardThenSoft.mDelivery.stop();
-        drive.setNewCenterState();
-        drive.runToState(precisionMode);
-
+        drivetrainControllteleop = true;
       }
 
 
-
-
+      // drivetrain stopping
+      if (drivetrainControllteleop) {
+        drive.setNewCenterState();
+        drive.runToState(precisionMode);
+      } else if (!drivetrainControllteleop) {
+        drive.stopDriveMOtors();
+      }
 
 
 
@@ -242,6 +249,7 @@ public class Robot extends TimedRobot {
       specialAlignmentNumbers = cameraLogic.CameraLogic.postXYZ();
       HardThenSoft.killAllAsync = true;
       HardThenSoft.autoThreadRunning = false;
+      drivetrainControllteleop = true;
     }
     
     

@@ -17,7 +17,7 @@ public class RunIntakeWithSwerve implements Runnable{
     public void run() {
         HardThenSoft.intakeRunning = true;
         
-        HardThenSoft.mIntake.set(.5);
+        HardThenSoft.mIntake.set(-.5);
         try {
             Thread.sleep((long) (time * 1000));
         } catch (InterruptedException e) {
