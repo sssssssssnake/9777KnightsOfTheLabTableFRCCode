@@ -163,36 +163,13 @@ public class Robot extends TimedRobot {
     if(!autoAlign && !HardThenSoft.autoThreadRunning){
 
       //Control the swerve drive
-      drive.setNewCenterState();
-      drive.runToState(precisionMode);
+
       //Enable/Disable Precision Drive Mode
       if (controller.getAButtonReleased()) { 
         precisionMode = !precisionMode;
       }
 
-      //Control the Delivery System
-      if (controller.getPOV() == 0) {
-        HardThenSoft.mDeliveryLeft.set(-1);
-        HardThenSoft.mDeliveryRight.set(1);
-        HardThenSoft.mIntake.set(.5);
-      } 
-      else if(controller.getPOV() == 90) {
-        HardThenSoft.mDeliveryLeft.set(-0.2475);
-        HardThenSoft.mDeliveryRight.set(0.17);
-        HardThenSoft.mIntake.set(.5);
-      }
-      else if(controller.getPOV() == 180) {
-        HardThenSoft.mDeliveryLeft.set(1);
-        HardThenSoft.mDeliveryRight.set(-1);
-      }
-      else if(controller.getPOV() == -1) {
-        HardThenSoft.mDelivery.stop();
-        HardThenSoft.mIntake.set(0);
-      }
-
-
-
-      //Control the Intake
+            //Control the Intake
       if (controller.getRightTriggerAxis() > .1) {
         HardThenSoft.mIntake.set(controller.getRightTriggerAxis());
       } 
@@ -202,6 +179,37 @@ public class Robot extends TimedRobot {
       else {
         HardThenSoft.mIntake.set(0);
       }
+
+      //Control the Delivery System
+      if (controller.getPOV() == 0) {
+        // SmartDashboard.putNumber("Velocity of Delivery: ", HardThenSoft.mDeliveryLeft.getEncoder().getVelocity());
+        if(HardThenSoft.mDeliveryLeft.getEncoder().getVelocity() < -4000){
+            HardThenSoft.mIntake.set(-.5);
+
+        }
+        HardThenSoft.mDeliveryLeft.set(-1);
+        HardThenSoft.mDeliveryRight.set(1);
+      } 
+      else if(controller.getPOV() == 90) {
+                HardThenSoft.mIntake.set(-.5);
+
+        HardThenSoft.mDeliveryLeft.set(-0.2475);
+        HardThenSoft.mDeliveryRight.set(0.17);
+      }
+      else if(controller.getPOV() == 180) {
+        HardThenSoft.mDeliveryLeft.set(1);
+        HardThenSoft.mDeliveryRight.set(-1);
+      }
+      else{
+        HardThenSoft.mDelivery.stop();
+        drive.setNewCenterState();
+        drive.runToState(precisionMode);
+
+      }
+
+
+
+
 
 
 

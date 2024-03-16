@@ -126,29 +126,17 @@ public class PositionThread implements Runnable{
         double setGyroAngle = currentGyroValue + newRotation;
         setGyroAngle = zeroToTwoPI(setGyroAngle);
 
-        // while (Math.abs(angleDifference) > stopRadianError && !HardThenSoft.killAllAsync) {
-        //     if (Math.abs(angleDifference) > rotationGate) {
-        //         HardThenSoft.frontLeftDrive.set( rotationGoSpeed * findSign(angleDifference));
-        //         HardThenSoft.frontRightDrive.set(rotationGoSpeed * findSign(angleDifference));
-        //         HardThenSoft.backLeftDrive.set(  rotationGoSpeed * findSign(angleDifference));
-        //         HardThenSoft.backRightDrive.set( rotationGoSpeed * findSign(angleDifference));
-        //     } else {
-        //         HardThenSoft.frontLeftDrive.set( rotationGoSpeed * (angleDifference / rotationGate) * findSign(angleDifference));
-        //         HardThenSoft.frontRightDrive.set(rotationGoSpeed * (angleDifference / rotationGate) * findSign(angleDifference));
-        //         HardThenSoft.backLeftDrive.set(  rotationGoSpeed * (angleDifference / rotationGate) * findSign(angleDifference));
-        //         HardThenSoft.backRightDrive.set( rotationGoSpeed * (angleDifference / rotationGate) * findSign(angleDifference));
-        //     }
-
-        //     oldGyroValue = (HardThenSoft.navx.getAngle() * Math.PI / 180) + Math.PI;
-        //     angleDifference = findBestAngleDifference(oldGyroValue, newGyroValue);
+        // the positive power rotates the robot positively angle wise, but the angles are reversed.
+        while (Math.abs(setGyroAngle - currentGyroValue) > stopRadianError && !HardThenSoft.killAllAsync){
+            if (Math.abs(setGyroAngle- currentGyroValue) > rotationGate) {
+                HardThenSoft.frontLeftDrive.set(rotationGoSpeed * findSign(findBestAngleDifference(currentGyroValue, setGyroAngle)));
+            } else {
+                HardThenSoft.frontLeftDrive.set(rotationGoSpeed * findSign(zeroToTwoPI(findBestAngleDifference(currentGyroValue, setGyroAngle))));
+            }
             
-        // }
-        HardThenSoft.frontLeftDrive.set( .2);
-        HardThenSoft.frontRightDrive.set(.2);
-        HardThenSoft.backLeftDrive.set(  .2);
-        HardThenSoft.backRightDrive.set( .2);
+        }
+        
 
-        sleepyNightNight(2000);
 
         // stop the robot
         HardThenSoft.killAllAsync = true;
@@ -232,16 +220,16 @@ public class PositionThread implements Runnable{
         return differences[smallestDifference];
     }
 
-    // int findSign(double value) {
-    //     if (value == 0) {
-    //         return 0;
-    //     } else if (value <0) {
-    //         return -1;
-    //     } else if (value > 0) {
-    //         return 1;
-    //     } else {
-    //         return 1;
-    //     }
-    // }
+    int findSign(double value) {
+        if (value == 0) {
+            return 0;
+        } else if (value <0) {
+            return -1;
+        } else if (value > 0) {
+            return 1;
+        } else {
+            return 1;
+        }
+    }
     
 }
