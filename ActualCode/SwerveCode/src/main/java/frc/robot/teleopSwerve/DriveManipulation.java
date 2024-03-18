@@ -208,7 +208,7 @@ public class DriveManipulation {
         */
 
         if (precisionMode) {
-            power(.1, swerveModuleSpeeds);
+            power(.15, swerveModuleSpeeds);
         } else {
             power(.7, swerveModuleSpeeds);
         }

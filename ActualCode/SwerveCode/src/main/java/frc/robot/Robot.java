@@ -102,9 +102,10 @@ public class Robot extends TimedRobot {
         
         break;
       case kDefaultAuto:
-        autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
-        autonomoustCommands.add(new Thread(new PositionThread(100, -150, Math.PI)));
-        // autonomoustCommands.add(new Thread(new AutoUpdate(-150, 0, Math.PI)));
+      autonomoustCommands.add(new Thread(new PositionThread(0, 0, Math.PI)));
+      autonomoustCommands.add(new Thread(new PositionThread(0, 0, -Math.PI)));
+      // autonomoustCommands.add(new Thread(new AutoUpdate(-150, 0, Math.PI)));
+      // autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
         break; 
       default:
         break;
@@ -184,7 +185,7 @@ public class Robot extends TimedRobot {
       //Control the Delivery System
       if (controller.getPOV() == 0) {
         // SmartDashboard.putNumber("Velocity of Delivery: ", HardThenSoft.mDeliveryLeft.getEncoder().getVelocity());
-        if(HardThenSoft.mDeliveryLeft.getEncoder().getVelocity() < -4000){
+        if(HardThenSoft.mDeliveryLeft.getEncoder().getVelocity() < -5000){
             HardThenSoft.mIntake.set(-.5);
 
         }

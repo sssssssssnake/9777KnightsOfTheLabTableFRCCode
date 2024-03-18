@@ -1,7 +1,10 @@
 package frc.robot.autonomousCommands;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.HardThenSoft;
 import frc.robot.Robot;
 
@@ -131,10 +134,23 @@ public class PositionThread implements Runnable{
         // the positive power rotates the robot positively angle wise, but the angles are reversed.
         while (Math.abs(setGyroAngle - currentGyroValue) > stopRadianError && !HardThenSoft.killAllAsync){
             if (Math.abs(setGyroAngle- currentGyroValue) > rotationGate) {
-                HardThenSoft.frontLeftDrive.set(rotationGoSpeed * findSign(findBestAngleDifference(currentGyroValue, setGyroAngle)));
-            } else {
-                HardThenSoft.frontLeftDrive.set(rotationGoSpeed * findSign(zeroToTwoPI(findBestAngleDifference(currentGyroValue, setGyroAngle))));
+                HardThenSoft.frontLeftDrive.set( rotationGoSpeed * -findSign(findBestAngleDifference(currentGyroValue, setGyroAngle)));
+                HardThenSoft.frontRightDrive.set(rotationGoSpeed * -findSign(findBestAngleDifference(currentGyroValue, setGyroAngle)));
+                HardThenSoft.backLeftDrive.set(  rotationGoSpeed * -findSign(findBestAngleDifference(currentGyroValue, setGyroAngle)));
+                HardThenSoft.backRightDrive.set( rotationGoSpeed * -findSign(findBestAngleDifference(currentGyroValue, setGyroAngle)));
+            } else {      
+                HardThenSoft.frontLeftDrive.set( rotationGoSpeed * zeroToTwoPI(findBestAngleDifference(currentGyroValue, setGyroAngle)) / rotationGate);
+                HardThenSoft.frontRightDrive.set(rotationGoSpeed * zeroToTwoPI(findBestAngleDifference(currentGyroValue, setGyroAngle)) / rotationGate);
+                HardThenSoft.backLeftDrive.set(  rotationGoSpeed * zeroToTwoPI(findBestAngleDifference(currentGyroValue, setGyroAngle)) / rotationGate);
+                HardThenSoft.backRightDrive.set( rotationGoSpeed * zeroToTwoPI(findBestAngleDifference(currentGyroValue, setGyroAngle)) / rotationGate);
             }
+
+            currentGyroValue = HardThenSoft.navx.getAngle() * (Math.PI / 180)  + Math.PI;
+            currentGyroValue = zeroToTwoPI(currentGyroValue);
+
+            SmartDashboard.putNumber("currentGyroValue", currentGyroValue);
+            SmartDashboard.putNumber("setGyroAngle", setGyroAngle);
+            SmartDashboard.putNumber("difference", findBestAngleDifference(currentGyroValue, setGyroAngle));
             
         }
         
