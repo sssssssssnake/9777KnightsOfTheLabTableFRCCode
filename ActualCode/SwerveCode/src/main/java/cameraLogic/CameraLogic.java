@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.autonomousCommands.AutoUpdate;
+import frc.robot.autonomousCommands.PositionThread;
 
 
 public final class CameraLogic {
@@ -43,10 +44,10 @@ public final class CameraLogic {
                 double[] targetPose = {
                     (updatedTargetPos[0] - idTarget[0][0])*100,
                     (updatedTargetPos[2] - idTarget[0][1])*100,
-                    updatedTargetPos[4]/180*Math.PI,
+                    updatedTargetPos[4]/180*Math.PI - idTarget[0][2],
                 };
 
-                Thread run = new Thread(new AutoUpdate(targetPose[0], targetPose[1], targetPose[2]));
+                Thread run = new Thread(new PositionThread(targetPose[0], targetPose[1], targetPose[2]));
                 run.start();
             
                 break;

@@ -16,8 +16,8 @@ public class PositionThread implements Runnable{
     double goSpeed = .3;
     double conversionRate = 5;
     double radius = 42.4264069;
-    double rotationGoSpeed = .3;
-    double stopRadianError = .1;
+    double rotationGoSpeed = .4;
+    double stopRadianError = .08;
     double rotationGate = 2;
 
     public double currentEncoderValue;
@@ -49,7 +49,7 @@ public class PositionThread implements Runnable{
   public PositionThread(double x, double y, double rotation, boolean runIntake) {
     this.newX = x;
     this.newY = -y;
-    this.newRotation = rotation;
+    this.newRotation = rotation * (1.06);
     this.runIntake = runIntake;
   }
 
