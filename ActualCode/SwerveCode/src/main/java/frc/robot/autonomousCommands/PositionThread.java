@@ -16,7 +16,7 @@ public class PositionThread implements Runnable{
     double goSpeed = .3;
     double conversionRate = 5;
     double radius = 42.4264069;
-    double rotationGoSpeed = .1;
+    double rotationGoSpeed = .2;
     double stopRadianError = .15;
     double rotationGate = 1.5;
 
@@ -134,15 +134,15 @@ public class PositionThread implements Runnable{
         // the positive power rotates the robot positively angle wise, but the angles are reversed.
         while (Math.abs(setGyroAngle - currentGyroValue) > stopRadianError && !HardThenSoft.killAllAsync){
             if (Math.abs(setGyroAngle- currentGyroValue) > rotationGate) {
-                HardThenSoft.frontLeftDrive.set( rotationGoSpeed * findSign(findBestAngleDifference(currentGyroValue, setGyroAngle)));
-                HardThenSoft.frontRightDrive.set(rotationGoSpeed * findSign(findBestAngleDifference(currentGyroValue, setGyroAngle)));
-                HardThenSoft.backLeftDrive.set(  rotationGoSpeed * findSign(findBestAngleDifference(currentGyroValue, setGyroAngle)));
-                HardThenSoft.backRightDrive.set( rotationGoSpeed * findSign(findBestAngleDifference(currentGyroValue, setGyroAngle)));
-            } else {      
-                HardThenSoft.frontLeftDrive.set( rotationGoSpeed * findBestAngleDifference(currentGyroValue, setGyroAngle) / rotationGate);
-                HardThenSoft.frontRightDrive.set(rotationGoSpeed * findBestAngleDifference(currentGyroValue, setGyroAngle) / rotationGate);
-                HardThenSoft.backLeftDrive.set(  rotationGoSpeed * findBestAngleDifference(currentGyroValue, setGyroAngle) / rotationGate);
-                HardThenSoft.backRightDrive.set( rotationGoSpeed * findBestAngleDifference(currentGyroValue, setGyroAngle) / rotationGate);
+                HardThenSoft.frontLeftDrive.set( rotationGoSpeed * -findSign(findBestAngleDifference(currentGyroValue, setGyroAngle)));
+                HardThenSoft.frontRightDrive.set(rotationGoSpeed * -findSign(findBestAngleDifference(currentGyroValue, setGyroAngle)));
+                HardThenSoft.backLeftDrive.set(  rotationGoSpeed * -findSign(findBestAngleDifference(currentGyroValue, setGyroAngle)));
+                HardThenSoft.backRightDrive.set( rotationGoSpeed * -findSign(findBestAngleDifference(currentGyroValue, setGyroAngle)));
+            } else {
+                HardThenSoft.frontLeftDrive.set( rotationGoSpeed * -findBestAngleDifference(currentGyroValue, setGyroAngle) / rotationGate);
+                HardThenSoft.frontRightDrive.set(rotationGoSpeed * -findBestAngleDifference(currentGyroValue, setGyroAngle) / rotationGate);
+                HardThenSoft.backLeftDrive.set(  rotationGoSpeed * -findBestAngleDifference(currentGyroValue, setGyroAngle) / rotationGate);
+                HardThenSoft.backRightDrive.set( rotationGoSpeed * -findBestAngleDifference(currentGyroValue, setGyroAngle) / rotationGate);
             }
 
             currentGyroValue = HardThenSoft.navx.getAngle() * (Math.PI / 180)  + Math.PI;

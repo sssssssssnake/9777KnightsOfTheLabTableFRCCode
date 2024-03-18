@@ -103,7 +103,7 @@ public class Robot extends TimedRobot {
         break;
       case kDefaultAuto:
       autonomoustCommands.add(new Thread(new PositionThread(0, 0, Math.PI)));
-      autonomoustCommands.add(new Thread(new PositionThread(0, 0, -Math.PI)));
+      autonomoustCommands.add(new Thread(new PositionThread(0, 0, -Math.PI / 2)));
       // autonomoustCommands.add(new Thread(new AutoUpdate(-150, 0, Math.PI)));
       // autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
         break; 
