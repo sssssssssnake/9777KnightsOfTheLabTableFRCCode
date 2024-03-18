@@ -16,9 +16,9 @@ public class PositionThread implements Runnable{
     double goSpeed = .3;
     double conversionRate = 5;
     double radius = 42.4264069;
-    double rotationGoSpeed = .2;
-    double stopRadianError = .15;
-    double rotationGate = 1.5;
+    double rotationGoSpeed = .3;
+    double stopRadianError = .1;
+    double rotationGate = 2;
 
     public double currentEncoderValue;
 
