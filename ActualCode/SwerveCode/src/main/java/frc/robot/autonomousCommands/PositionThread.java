@@ -92,7 +92,7 @@ public class PositionThread implements Runnable{
         // drive to the position
         newEncoderValue = currentEncoderValue + centimetersToEncoders(distanceToPosition);
 
-        while (Math.abs(newEncoderValue - getNewEncoderValue()) > stopError && !HardThenSoft.killAllAsync) {
+        while (Math.abs(newEncoderValue - getNewEncoderValue()) > stopError && HardThenSoft.autoThreadRunning) {
             if (Math.abs(newEncoderValue - getNewEncoderValue()) < xGate) {
                 HardThenSoft.frontLeftDrive.set( goSpeed);
                 HardThenSoft.frontRightDrive.set(goSpeed);
@@ -132,7 +132,7 @@ public class PositionThread implements Runnable{
         setGyroAngle = zeroToTwoPI(setGyroAngle);
 
         // the positive power rotates the robot positively angle wise, but the angles are reversed.
-        while (Math.abs(setGyroAngle - currentGyroValue) > stopRadianError && !HardThenSoft.killAllAsync){
+        while (Math.abs(setGyroAngle - currentGyroValue) > stopRadianError && HardThenSoft.autoThreadRunning){
             if (Math.abs(setGyroAngle- currentGyroValue) > rotationGate) {
                 HardThenSoft.frontLeftDrive.set( rotationGoSpeed * -findSign(findBestAngleDifference(currentGyroValue, setGyroAngle)));
                 HardThenSoft.frontRightDrive.set(rotationGoSpeed * -findSign(findBestAngleDifference(currentGyroValue, setGyroAngle)));

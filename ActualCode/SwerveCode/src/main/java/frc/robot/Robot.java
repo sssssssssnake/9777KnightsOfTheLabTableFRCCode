@@ -103,7 +103,7 @@ public class Robot extends TimedRobot {
         break;
       case kDefaultAuto:
       // autonomoustCommands.add(new Thread(new PositionThread(0, 0, Math.PI)));
-      autonomoustCommands.add(new Thread(new PositionThread(0, 0, -Math.PI / 2)));
+      autonomoustCommands.add(new Thread(new PositionThread(0, 20, -Math.PI / 2)));
       autonomoustCommands.add(new Thread(new PositionThread(0, 0, Math.PI / 2)));
       // autonomoustCommands.add(new Thread(new AutoUpdate(-150, 0, Math.PI)));
       // autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
@@ -161,6 +161,11 @@ public class Robot extends TimedRobot {
 
     if(controller.getYButtonReleased()){
       autoAlign = true;
+      HardThenSoft.killAllAsync = false;
+      HardThenSoft.autoThreadRunning = true;
+      CameraLogic.autoAlign();
+      System.out.print("end of Robot thread");
+      SmartDashboard.putString("helpMe", "autoAlign");
     }
 
     if(!autoAlign && !HardThenSoft.autoThreadRunning){
