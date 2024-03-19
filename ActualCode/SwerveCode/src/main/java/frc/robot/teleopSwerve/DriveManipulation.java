@@ -20,7 +20,7 @@ public class DriveManipulation {
     // These are constants that needn't be changed by any code
 
     // offset for where motors are in radians
-    private double[] swerveAngleOffset = {
+    public double[] swerveAngleOffset = {
         107 * (Math.PI /180),
         -53 * (Math.PI /180),
         -65 * (Math.PI /180),

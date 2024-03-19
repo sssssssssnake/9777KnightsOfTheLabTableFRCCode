@@ -52,6 +52,11 @@ public class HardThenSoft {
 
     public static double gyroOffset = 0.0;
 
+    public static double frontLeftAngleOffset = 107;
+    public static double frontRightAngleOffset = -53;
+    public static double backLeftAngleOffset = -65;
+    public static double backRightAngleOffset = -55;
+
     public HardThenSoft() {
         mHangLeft.setIdleMode(CANSparkMax.IdleMode.kBrake);
         mHangRight.setIdleMode(CANSparkMax.IdleMode.kBrake);

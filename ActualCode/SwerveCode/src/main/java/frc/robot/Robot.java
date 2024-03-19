@@ -33,7 +33,6 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   public static XboxController controller = new XboxController(0);
   private DriveManipulation drive = new DriveManipulation(controller);
-  double frontRightDriveEncoderNumber = 0;
   boolean precisionMode = false;
 
   boolean autoAlign = false;
@@ -58,7 +57,6 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
-    frontRightDriveEncoderNumber = HardThenSoft.frontRightDriveEncoder.getPosition();
   }
 
   /**
@@ -75,12 +73,22 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("backLeft", HardThenSoft.backLeft.basicTurnEncoder.getAbsolutePosition().getValueAsDouble());
     SmartDashboard.putNumber("backRight", HardThenSoft.backRight.basicTurnEncoder.getAbsolutePosition().getValueAsDouble());
 
-    SmartDashboard.putNumber("frontLeftDrive Stuff", HardThenSoft.frontRightDriveEncoder.getPosition() - frontRightDriveEncoderNumber);
     SmartDashboard.putNumber("miracleMagicX", specialAlignmentNumbers[0]);
     SmartDashboard.putNumber("miracleMagicY", specialAlignmentNumbers[1]);
     SmartDashboard.putNumber("miracleMagicZ", specialAlignmentNumbers[2]);
     SmartDashboard.putNumber("GyroRadians", HardThenSoft.navx.getAngle() * (Math.PI / 180) + Math.PI);
     SmartDashboard.putNumber("funnyRPM", HardThenSoft.mDeliveryLeftEncoder.getVelocity());
+
+
+    SmartDashboard.putNumber("frontLeftDrive", drive.swerveAngleOffset[0]);
+    SmartDashboard.putNumber("frontRightDrive", drive.swerveAngleOffset[1]);
+    SmartDashboard.putNumber("backLeftDrive", drive.swerveAngleOffset[2]);
+    SmartDashboard.putNumber("backRightDrive", drive.swerveAngleOffset[3]);
+
+    SmartDashboard.getNumber("frontLeftDrive", drive.swerveAngleOffset[0]);
+    SmartDashboard.getNumber("frontRightDrive", drive.swerveAngleOffset[1]);
+    SmartDashboard.getNumber("backLeftDrive", drive.swerveAngleOffset[2]);
+    SmartDashboard.getNumber("backRightDrive", drive.swerveAngleOffset[3]);
   }
 
   /**
@@ -158,6 +166,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    
 
 
     if(controller.getYButtonReleased()){
