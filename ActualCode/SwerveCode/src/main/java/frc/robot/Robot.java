@@ -39,6 +39,8 @@ public class Robot extends TimedRobot {
   double[] specialAlignmentNumbers = new double[3];
   public boolean drivetrainControllteleop = true;
 
+  double[] degrees = new double[4];
+
 
   List<Thread> autonomoustCommands = new ArrayList<Thread>();
   public static boolean runAsync = true;
@@ -80,15 +82,20 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("funnyRPM", HardThenSoft.mDeliveryLeftEncoder.getVelocity());
 
 
-    SmartDashboard.putNumber("frontLeftDrive", drive.swerveAngleOffset[0]);
-    SmartDashboard.putNumber("frontRightDrive", drive.swerveAngleOffset[1]);
-    SmartDashboard.putNumber("backLeftDrive", drive.swerveAngleOffset[2]);
-    SmartDashboard.putNumber("backRightDrive", drive.swerveAngleOffset[3]);
+    SmartDashboard.putNumber("frontLeftDrive", drive.swerveAngleOffset[0] * (180/Math.PI));
+    SmartDashboard.putNumber("frontRightDrive", drive.swerveAngleOffset[1]* (180/Math.PI));
+    SmartDashboard.putNumber("backLeftDrive", drive.swerveAngleOffset[2]* (180/Math.PI));
+    SmartDashboard.putNumber("backRightDrive", drive.swerveAngleOffset[3]* (180/Math.PI));
 
-    SmartDashboard.getNumber("frontLeftDrive", drive.swerveAngleOffset[0]);
-    SmartDashboard.getNumber("frontRightDrive", drive.swerveAngleOffset[1]);
-    SmartDashboard.getNumber("backLeftDrive", drive.swerveAngleOffset[2]);
-    SmartDashboard.getNumber("backRightDrive", drive.swerveAngleOffset[3]);
+    degrees[0] = SmartDashboard.getNumber("frontLeftDriveDegrees", drive.swerveAngleOffset[0]);
+    degrees[1] = SmartDashboard.getNumber("frontRightDriveDegrees", drive.swerveAngleOffset[1]);
+    degrees[2] = SmartDashboard.getNumber("backLeftDriveDegrees", drive.swerveAngleOffset[2]);
+    degrees[3] = SmartDashboard.getNumber("backRightDriveDegrees", drive.swerveAngleOffset[3]);
+
+    drive.swerveAngleOffset[0] = degrees[0] * (Math.PI / 180);
+    drive.swerveAngleOffset[1] = degrees[1] * (Math.PI / 180);
+    drive.swerveAngleOffset[2] = degrees[2] * (Math.PI / 180);
+    drive.swerveAngleOffset[3] = degrees[3] * (Math.PI / 180);
   }
 
   /**
