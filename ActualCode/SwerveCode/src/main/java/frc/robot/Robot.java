@@ -59,6 +59,11 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+    
+    SmartDashboard.putNumber("frontLeftDriveDegrees", drive.swerveAngleOffset[0]);
+    SmartDashboard.putNumber("frontRightDriveDegrees", drive.swerveAngleOffset[1]);
+    SmartDashboard.putNumber("backLeftDriveDegrees", drive.swerveAngleOffset[2]);
+    SmartDashboard.putNumber("backRightDriveDegrees", drive.swerveAngleOffset[3]);
   }
 
   /**
@@ -82,20 +87,20 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("funnyRPM", HardThenSoft.mDeliveryLeftEncoder.getVelocity());
 
 
-    SmartDashboard.putNumber("frontLeftDrive", drive.swerveAngleOffset[0] * (180/Math.PI));
-    SmartDashboard.putNumber("frontRightDrive", drive.swerveAngleOffset[1]* (180/Math.PI));
-    SmartDashboard.putNumber("backLeftDrive", drive.swerveAngleOffset[2]* (180/Math.PI));
-    SmartDashboard.putNumber("backRightDrive", drive.swerveAngleOffset[3]* (180/Math.PI));
+    // SmartDashboard.putNumber("frontLeftDrive", drive.swerveAngleOffset[0]);
+    // SmartDashboard.putNumber("frontRightDrive", drive.swerveAngleOffset[1]);
+    // SmartDashboard.putNumber("backLeftDrive", drive.swerveAngleOffset[2]);
+    // SmartDashboard.putNumber("backRightDrive", drive.swerveAngleOffset[3]);
 
-    degrees[0] = SmartDashboard.getNumber("frontLeftDriveDegrees", drive.swerveAngleOffset[0]);
-    degrees[1] = SmartDashboard.getNumber("frontRightDriveDegrees", drive.swerveAngleOffset[1]);
-    degrees[2] = SmartDashboard.getNumber("backLeftDriveDegrees", drive.swerveAngleOffset[2]);
-    degrees[3] = SmartDashboard.getNumber("backRightDriveDegrees", drive.swerveAngleOffset[3]);
+    // degrees[0] = SmartDashboard.getNumber("frontLeftDriveDegrees", drive.swerveAngleOffset[0]);
+    // degrees[1] = SmartDashboard.getNumber("frontRightDriveDegrees", drive.swerveAngleOffset[1]);
+    // degrees[2] = SmartDashboard.getNumber("backLeftDriveDegrees", drive.swerveAngleOffset[2]);
+    // degrees[3] = SmartDashboard.getNumber("backRightDriveDegrees", drive.swerveAngleOffset[3]);
 
-    drive.swerveAngleOffset[0] = degrees[0] * (Math.PI / 180);
-    drive.swerveAngleOffset[1] = degrees[1] * (Math.PI / 180);
-    drive.swerveAngleOffset[2] = degrees[2] * (Math.PI / 180);
-    drive.swerveAngleOffset[3] = degrees[3] * (Math.PI / 180);
+    // drive.swerveAngleOffset[0] = degrees[0] * (Math.PI / 180);
+    // drive.swerveAngleOffset[1] = degrees[1] * (Math.PI / 180);
+    // drive.swerveAngleOffset[2] = degrees[2] * (Math.PI / 180);
+    // drive.swerveAngleOffset[3] = degrees[3] * (Math.PI / 180);
   }
 
   /**

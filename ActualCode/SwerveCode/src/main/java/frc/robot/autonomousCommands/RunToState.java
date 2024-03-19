@@ -6,10 +6,10 @@ public class RunToState implements Runnable {
     private double[] wheelRotationAngles = new double[4];
     public void run() {
         while (true && !HardThenSoft.killAllAsync) {
-            HardThenSoft.frontLeft.setDesiredAngle(wheelRotationAngles[0] + 152 * (Math.PI /180));
+            HardThenSoft.frontLeft.setDesiredAngle(wheelRotationAngles[0] + 150 * (Math.PI /180));
             HardThenSoft.frontRight.setDesiredAngle(wheelRotationAngles[1] - 8 * (Math.PI /180));
-            HardThenSoft.backLeft.setDesiredAngle(wheelRotationAngles[2] - 20 * (Math.PI /180));
-            HardThenSoft.backRight.setDesiredAngle(wheelRotationAngles[3] - 15 * (Math.PI /180));
+            HardThenSoft.backLeft.setDesiredAngle(wheelRotationAngles[2] - 25 * (Math.PI /180));
+            HardThenSoft.backRight.setDesiredAngle(wheelRotationAngles[3] - 10 * (Math.PI /180));
 
             HardThenSoft.frontLeft.runToState();
             HardThenSoft.frontRight.runToState();

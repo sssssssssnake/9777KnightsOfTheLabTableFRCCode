@@ -21,10 +21,10 @@ public class DriveManipulation {
 
     // offset for where motors are in radians
     public double[] swerveAngleOffset = {
-        107 * (Math.PI /180),
-        -53 * (Math.PI /180),
-        -65 * (Math.PI /180),
-        -55 * (Math.PI /180),
+         2.705260,
+        -0.016145,
+        -0.349066,
+        -0.139626,
     };
     
     /**
@@ -64,8 +64,8 @@ public class DriveManipulation {
 
         double angleFromNavX = HardThenSoft.navx.getAngle() / 180 * Math.PI;
         angleFromNavX += Math.PI + HardThenSoft.gyroOffset;
-        x = oldX * Math.cos(angleFromNavX) - oldY * Math.sin(angleFromNavX);
-        y = oldX * Math.sin(angleFromNavX) + oldY * Math.cos(angleFromNavX);
+        // x = oldX * Math.cos(angleFromNavX) - oldY * Math.sin(angleFromNavX);
+        // y = oldX * Math.sin(angleFromNavX) + oldY * Math.cos(angleFromNavX);
 
         if ((x < .1 && x > -.1) && (y < .1 && y > -.1) && (rotation < .1 && rotation > -.1)) {
             x = 0;
