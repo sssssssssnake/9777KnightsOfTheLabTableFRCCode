@@ -80,6 +80,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("miracleMagicY", specialAlignmentNumbers[1]);
     SmartDashboard.putNumber("miracleMagicZ", specialAlignmentNumbers[2]);
     SmartDashboard.putNumber("GyroRadians", HardThenSoft.navx.getAngle() * (Math.PI / 180) + Math.PI);
+    SmartDashboard.putNumber("funnyRPM", HardThenSoft.mDeliveryLeftEncoder.getVelocity());
   }
 
   /**
@@ -103,8 +104,8 @@ public class Robot extends TimedRobot {
         break;
       case kDefaultAuto:
       // autonomoustCommands.add(new Thread(new PositionThread(0, 0, Math.PI)));
-      autonomoustCommands.add(new Thread(new PositionThread(0, 20, -Math.PI / 2)));
-      autonomoustCommands.add(new Thread(new PositionThread(0, 0, Math.PI / 2)));
+      autonomoustCommands.add(new Thread(new PositionThread(0, -60,0, true)));
+      // autonomoustCommands.add(new Thread(new PositionThread(0, 0, Math.PI / 2)));
       // autonomoustCommands.add(new Thread(new AutoUpdate(-150, 0, Math.PI)));
       // autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
         break; 
@@ -161,11 +162,7 @@ public class Robot extends TimedRobot {
 
     if(controller.getYButtonReleased()){
       autoAlign = true;
-      HardThenSoft.killAllAsync = false;
-      HardThenSoft.autoThreadRunning = true;
       CameraLogic.autoAlign();
-      System.out.print("end of Robot thread");
-      SmartDashboard.putString("helpMe", "autoAlign");
     }
 
     if(!autoAlign && !HardThenSoft.autoThreadRunning){
@@ -191,7 +188,7 @@ public class Robot extends TimedRobot {
       //Control the Delivery System
       if (controller.getPOV() == 0) {
         // SmartDashboard.putNumber("Velocity of Delivery: ", HardThenSoft.mDeliveryLeft.getEncoder().getVelocity());
-        if(HardThenSoft.mDeliveryLeft.getEncoder().getVelocity() < -5000){
+        if(HardThenSoft.mDeliveryLeft.getEncoder().getVelocity() < -4700){
             HardThenSoft.mIntake.set(-.5);
 
         }

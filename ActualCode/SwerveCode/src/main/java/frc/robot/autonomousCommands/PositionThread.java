@@ -12,8 +12,8 @@ public class PositionThread implements Runnable{
 
     // cosntants regarding movement
     double stopError = .3;
-    double xGate = 10;
-    double goSpeed = .3;
+    double xGate = 50;
+    double goSpeed = .4;
     double conversionRate = 5;
     double radius = 42.4264069;
     double rotationGoSpeed = .4;
@@ -65,8 +65,7 @@ public class PositionThread implements Runnable{
         HardThenSoft.backRightDrive.setIdleMode(IdleMode.kBrake);
 
         // get the current encoder value and store it
-        currentEncoderValue = getNewEncoderValue();
-
+        
         // calculate the angle for the position translation and the distance to the position
         double[] newPositions = {newX, newY};
         double angleFromPosition;
@@ -76,20 +75,27 @@ public class PositionThread implements Runnable{
         } else {
             angleFromPosition = Math.PI * 2 - Math.acos(newPositions[0] / Math.sqrt(newPositions[0] * newPositions[0] + newPositions[1] * newPositions[1]));
         }
-
+        
         // calculate the distance to the new position
         double distanceToPosition = Math.sqrt(newPositions[0] * newPositions[0] + newPositions[1] * newPositions[1]);
-
+        
         // new we want to drive there
-
+        
         // set the wheel angles to the angle of the position
         HardThenSoft.killAllAsync = false;
         startSetWheelAngles(angleFromPosition);
-        sleepyNightNight(300);
-
-
-
+        sleepyNightNight(500);
+        
+        if (runIntake) {
+            HardThenSoft.intakeRunning = true;
+            Thread runIntake = new Thread(new RunIntakeWithSwerve(0, 3));
+            runIntake.start();
+            goSpeed = .1;
+        }
+        
+        
         // drive to the position
+        currentEncoderValue = getNewEncoderValue();
         newEncoderValue = currentEncoderValue + centimetersToEncoders(distanceToPosition);
 
         while (Math.abs(newEncoderValue - getNewEncoderValue()) > stopError && HardThenSoft.autoThreadRunning) {
@@ -124,7 +130,7 @@ public class PositionThread implements Runnable{
         // set the wheel angles to the angle of the rotation
         HardThenSoft.killAllAsync = false;
         startSetWheelAngles(constantRotationAngle);
-        sleepyNightNight(300);
+        sleepyNightNight(500);
 
         double currentGyroValue = HardThenSoft.navx.getAngle() * (Math.PI / 180)  + Math.PI;
         currentGyroValue = zeroToTwoPI(currentGyroValue);

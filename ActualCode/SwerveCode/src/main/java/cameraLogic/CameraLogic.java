@@ -4,7 +4,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.autonomousCommands.AutoUpdate;
 import frc.robot.autonomousCommands.PositionThread;
 
 
@@ -25,15 +24,13 @@ public final class CameraLogic {
 
     public static double[][] idTarget = {
         //Distance from Speaker Tag
-        {0, 1.546440, 0}
+        {0, 1.9, 0}
     };
     
 
  
 
     public static void autoAlign(){
-        SmartDashboard.putString("helpMe", "startedAutoAlighn");
-
         NetworkTableEntry id = camera.getEntry("tid");
         if (updatedTargetPos[0] == 0.0) {
             return;
@@ -50,9 +47,7 @@ public final class CameraLogic {
                 };
 
                 Thread run = new Thread(new PositionThread(targetPose[0], targetPose[1], targetPose[2]));
-                run.start();
-                SmartDashboard.putString("helpMe", "should have started autonomousStuff");
-            
+                run.start();            
                 break;
             case 0:
             default:
