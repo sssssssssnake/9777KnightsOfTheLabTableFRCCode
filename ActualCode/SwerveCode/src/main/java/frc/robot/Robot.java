@@ -120,19 +120,19 @@ public class Robot extends TimedRobot {
     System.out.println("Auto selected: " + m_autoSelected);
     switch (m_autoSelected) {
       case kCustomAuto:
-        
+        autonomoustCommands.add(new Thread(new PositionThread(0, -150, 0)));
         break;
       case kDefaultAuto:
-      autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
-      autonomoustCommands.add(new Thread(new PositionThread(0, -80, 0)));
-      autonomoustCommands.add(new Thread(new PositionThread(0, -60,0, true)));
-      autonomoustCommands.add(new Thread(new PositionThread(0, 130, 0)));
-      autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
-      autonomoustCommands.add(new Thread(new PositionThread(145, -60, 0)));
-      autonomoustCommands.add(new Thread(new PositionThread(0, -80,0, true)));
-      autonomoustCommands.add(new Thread(new PositionThread(-145, 140, 0)));
-      autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
-      // autonomoustCommands.add(new Thread(new AutoUpdate(-150, 0, Math.PI)));
+        autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
+        autonomoustCommands.add(new Thread(new PositionThread(0, -80, 0)));
+        autonomoustCommands.add(new Thread(new PositionThread(0, -60,0, true)));
+        autonomoustCommands.add(new Thread(new PositionThread(0, 130, 0)));
+        autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
+        autonomoustCommands.add(new Thread(new PositionThread(145, -60, 0)));
+        autonomoustCommands.add(new Thread(new PositionThread(0, -80,0, true)));
+        autonomoustCommands.add(new Thread(new PositionThread(-145, 140, 0)));
+        autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
+        // autonomoustCommands.add(new Thread(new AutoUpdate(-150, 0, Math.PI)));
         break; 
       default:
         break;

@@ -99,7 +99,7 @@ public class PositionThread implements Runnable{
         newEncoderValue = currentEncoderValue + centimetersToEncoders(distanceToPosition);
 
         while (Math.abs(newEncoderValue - getNewEncoderValue()) > stopError && HardThenSoft.autoThreadRunning) {
-            if (Math.abs(newEncoderValue - getNewEncoderValue()) < xGate) {
+            if (Math.abs(newEncoderValue - getNewEncoderValue()) > xGate) {
                 HardThenSoft.frontLeftDrive.set( goSpeed);
                 HardThenSoft.frontRightDrive.set(goSpeed);
                 HardThenSoft.backLeftDrive.set(  goSpeed);

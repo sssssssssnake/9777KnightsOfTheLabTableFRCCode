@@ -115,14 +115,26 @@ public class DriveManipulation {
             
 
             // calculate the hypotenuse
-            double hypotenuse = Math.sqrt(finalVector[0][0] * finalVector[0][0] + finalVector[0][1] * finalVector[0][1]);
+            // double hypotenuse = Math.sqrt(finalVector[0][0] * finalVector[0][0] + finalVector[0][1] * finalVector[0][1]);
+            double[] hypotenuse = {0, 0, 0, 0};
+            for (int i = 0; i < 4; i++) {
+                hypotenuse[i] = Math.sqrt(finalVector[i][0] * finalVector[i][0] + finalVector[i][1] * finalVector[i][1]);
+            }
+            SmartDashboard.putNumber("Hypotenuse", hypotenuse[3]);
+            SmartDashboard.putNumber("maybeNan", finalVector[3][0] / hypotenuse[3]);
             // calculate the angle using the previously commented out for loop, use hypotenuse
             for (int i = 0; i < 4; i++) {
                 if (finalVector[i][1] > 0) {
-                    swerveModuleAngles[i] = Math.acos(finalVector[i][0] / hypotenuse);
+                    swerveModuleAngles[i] = Math.acos(finalVector[i][0] / hypotenuse[i]);
                 } else if (finalVector[i][1] < 0) {
-                    swerveModuleAngles[i] = Math.PI * 2 - Math.acos(finalVector[i][0] / hypotenuse);
-                } 
+                    swerveModuleAngles[i] = Math.PI * 2 - Math.acos(finalVector[i][0] / hypotenuse[i]);
+                }  else {
+                    if (finalVector[i][0] > 0){
+                        swerveModuleAngles[i] = Math.PI;
+                    } else {
+                        swerveModuleAngles[i] = 0;
+                    }
+                }
             }
 
             SmartDashboard.putNumber("Front Left Angle", swerveModuleAngles[0]);
