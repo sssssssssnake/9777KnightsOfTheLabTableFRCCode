@@ -261,6 +261,7 @@ public class Robot extends TimedRobot {
 
       if (controller.getBackButton()) {
         HardThenSoft.gyroOffset = - HardThenSoft.navx.getAngle() / 180 * Math.PI;
+        HardThenSoft.gyroOffset -= Math.PI / 4;
       }
 
       

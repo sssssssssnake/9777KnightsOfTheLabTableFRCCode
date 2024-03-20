@@ -37,8 +37,8 @@ public final class CameraLogic {
         }
         switch ((int)id.getDouble(0.0)) {
             //Red and Blue Speaker
-            case 7:
             case 4:
+            case 7:
                 updateValues();
                 double[] targetPose = {
                     (updatedTargetPos[0] - idTarget[0][0])*100,
@@ -67,6 +67,7 @@ public final class CameraLogic {
         postXYZ[1] = (updatedTargetPos[2] - idTarget[0][1]) * 100;
         postXYZ[2] = updatedTargetPos[4] * Math.PI/180;
 
+        SmartDashboard.putNumber("ID", camera.getEntry("tid").getDouble(0));
         return postXYZ;
     }
     

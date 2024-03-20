@@ -33,10 +33,10 @@ public class DriveManipulation {
      * These are the default radian measure of the robot
      * @category Constant Expression */
     private double[] constantRotationAngle = {
-          Math.PI / 4,
-        - Math.PI / 4,
-          Math.PI * 3 / 4,
-        - Math.PI * 3 / 4,
+        0,
+        - Math.PI / 2,
+          Math.PI / 2,
+        - Math.PI,
     };
 
     public XboxController controller;
@@ -64,8 +64,8 @@ public class DriveManipulation {
 
         double angleFromNavX = HardThenSoft.navx.getAngle() / 180 * Math.PI;
         angleFromNavX += Math.PI + HardThenSoft.gyroOffset;
-        // x = oldX * Math.cos(angleFromNavX) - oldY * Math.sin(angleFromNavX);
-        // y = oldX * Math.sin(angleFromNavX) + oldY * Math.cos(angleFromNavX);
+        x = oldX * Math.cos(angleFromNavX) - oldY * Math.sin(angleFromNavX);
+        y = oldX * Math.sin(angleFromNavX) + oldY * Math.cos(angleFromNavX);
 
         if ((x < .1 && x > -.1) && (y < .1 && y > -.1) && (rotation < .1 && rotation > -.1)) {
             x = 0;
