@@ -47,7 +47,7 @@ public class Robot extends TimedRobot {
   int counterforAsync = 0;
 
   public Robot() {
-    super(.05);
+    super(.04);
   }
 
   /**
@@ -123,11 +123,16 @@ public class Robot extends TimedRobot {
         
         break;
       case kDefaultAuto:
-      // autonomoustCommands.add(new Thread(new PositionThread(0, 0, Math.PI)));
+      autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
+      autonomoustCommands.add(new Thread(new PositionThread(0, -80, 0)));
       autonomoustCommands.add(new Thread(new PositionThread(0, -60,0, true)));
-      // autonomoustCommands.add(new Thread(new PositionThread(0, 0, Math.PI / 2)));
+      autonomoustCommands.add(new Thread(new PositionThread(0, 130, 0)));
+      autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
+      autonomoustCommands.add(new Thread(new PositionThread(145, -60, 0)));
+      autonomoustCommands.add(new Thread(new PositionThread(0, -80,0, true)));
+      autonomoustCommands.add(new Thread(new PositionThread(-145, 140, 0)));
+      autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
       // autonomoustCommands.add(new Thread(new AutoUpdate(-150, 0, Math.PI)));
-      // autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
         break; 
       default:
         break;

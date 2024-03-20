@@ -102,15 +102,7 @@ public class DriveManipulation {
                 finalVector[i][1] = positionVector[1] + newRotationVector[i][1];
             }
             
-            if (rotation < .1 && rotation > -.1) {
-                brakeRotation = false;
-            } else {
-                if (Math.sqrt(positionVector[0] * positionVector[0] + positionVector[1] * positionVector[1]) < .1) {
-                    brakeRotation = true;
-                } else {
-                    brakeRotation = false;
-                }
-            }
+            
 
             // calculate the hypotenuse
             double hypotenuse = Math.sqrt(finalVector[0][0] * finalVector[0][0] + finalVector[0][1] * finalVector[0][1]);

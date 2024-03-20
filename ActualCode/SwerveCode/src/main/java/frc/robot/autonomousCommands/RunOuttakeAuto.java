@@ -20,12 +20,12 @@ public class RunOuttakeAuto implements Runnable {
         while (runCheck && !HardThenSoft.killAllAsync) {
             if (HardThenSoft.mDeliveryLeft.getEncoder().getVelocity() < -4000) {
                 runCheck = false;
-                if (runIntake) {
-                    intake.start();
-                }
             }
         }
-
+        
+        if (runIntake) {
+            intake.start();
+        }
 
         try {
             Thread.sleep(2000);

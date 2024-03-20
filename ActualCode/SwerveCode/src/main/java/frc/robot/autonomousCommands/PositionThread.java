@@ -88,7 +88,7 @@ public class PositionThread implements Runnable{
         
         if (runIntake) {
             HardThenSoft.intakeRunning = true;
-            Thread runIntake = new Thread(new RunIntakeWithSwerve(0, 3));
+            Thread runIntake = new Thread(new RunIntakeWithSwerve(0, 1.4));
             runIntake.start();
             goSpeed = .1;
         }
@@ -124,6 +124,8 @@ public class PositionThread implements Runnable{
 
         // now we can rotate the robot using the gyro
         if (newRotation == 0) {
+            HardThenSoft.autoThreadRunning = false;
+            Robot.runAsync = true;
             return;
         }
         
