@@ -101,6 +101,16 @@ public class DriveManipulation {
                 finalVector[i][0] = positionVector[0] + newRotationVector[i][0];
                 finalVector[i][1] = positionVector[1] + newRotationVector[i][1];
             }
+
+            SmartDashboard.putNumber("Front Left X", finalVector[0][0]);
+            SmartDashboard.putNumber("Front Right X", finalVector[1][0]);
+            SmartDashboard.putNumber("Back Left X", finalVector[2][0]);
+            SmartDashboard.putNumber("Back Right X", finalVector[3][0]);
+
+            SmartDashboard.putNumber("Front Left Y", finalVector[0][1]);
+            SmartDashboard.putNumber("Front Right Y", finalVector[1][1]);
+            SmartDashboard.putNumber("Back Left Y", finalVector[2][1]);
+            SmartDashboard.putNumber("Back Right Y", finalVector[3][1]);
             
             
 
