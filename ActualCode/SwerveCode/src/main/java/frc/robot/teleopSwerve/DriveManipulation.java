@@ -156,20 +156,20 @@ public class DriveManipulation {
         backLeft.runToState();
         backRight.runToState();
     
-        double sum = 0;
-        double avg = 0;
+        // double sum = 0;
+        // double avg = 0;
         
         
-        // now we can set the speeds
+        // // now we can set the speeds
 
-        //average the speeds to each of the motors
-        for(int i = 0; i < swerveModuleSpeeds.length; i++){  
-            //getting elements from the list and adding to the variable sum   
-            sum = sum + swerveModuleSpeeds[i];  
-            //finds the average of the list  
-            avg = sum / swerveModuleSpeeds.length;   
+        // //average the speeds to each of the motors
+        // for(int i = 0; i < swerveModuleSpeeds.length; i++){  
+        //     //getting elements from the list and adding to the variable sum   
+        //     sum = sum + swerveModuleSpeeds[i];  
+        //     //finds the average of the list  
+        //     avg = sum / swerveModuleSpeeds.length;   
 
-        }
+        // }
         /* 
         if (brakeRotation) {
             frontLeftDrive.setIdleMode(CANSparkFlex.IdleMode.kBrake);

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.autonomousCommands.PositionThread;
+import frc.robot.autonomousCommands.RunHangDown;
 import frc.robot.autonomousCommands.RunOuttakeAuto;
 import frc.robot.teleopSwerve.DriveManipulation;
 import edu.wpi.first.wpilibj.XboxController;
@@ -26,7 +27,7 @@ import cameraLogic.CameraLogic;
  */
 public class Robot extends TimedRobot {
   private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
+  private static final String defaultBlueWorks = "Blue aligned";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   public static XboxController controller = new XboxController(0);
@@ -53,8 +54,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
+    m_chooser.setDefaultOption("Working blue auto", defaultBlueWorks);
+    m_chooser.addOption("Default Auto", kDefaultAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
     
     SmartDashboard.putNumber("frontLeftDriveDegrees", drive.swerveAngleOffset[0]);
@@ -102,10 +103,11 @@ public class Robot extends TimedRobot {
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
     switch (m_autoSelected) {
-      case kCustomAuto:
+      case kDefaultAuto:
         autonomoustCommands.add(new Thread(new PositionThread(0, -150, 0)));
         break;
-      case kDefaultAuto:
+      case defaultBlueWorks:
+        autonomoustCommands.add(new Thread(new RunHangDown(4, true)));
         autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
         autonomoustCommands.add(new Thread(new PositionThread(0, -80, 0)));
         autonomoustCommands.add(new Thread(new PositionThread(0, -60,0, true)));
@@ -115,7 +117,6 @@ public class Robot extends TimedRobot {
         autonomoustCommands.add(new Thread(new PositionThread(0, -80,0, true)));
         autonomoustCommands.add(new Thread(new PositionThread(-145, 140, 0)));
         autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
-        // autonomoustCommands.add(new Thread(new AutoUpdate(-150, 0, Math.PI)));
         break; 
       default:
         break;
@@ -126,7 +127,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     switch (m_autoSelected) {
-      case kCustomAuto:
+      case defaultBlueWorks:
         // Put custom auto code here
         if (runAsync) {
           if(counterforAsync >= autonomoustCommands.size()){
@@ -137,7 +138,6 @@ public class Robot extends TimedRobot {
           }
         }
         break;
-      case kDefaultAuto:
       default:
       // Put default auto code here
         if (runAsync) {
