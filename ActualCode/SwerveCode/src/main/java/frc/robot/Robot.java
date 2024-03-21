@@ -131,29 +131,12 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-      case defaultBlueWorks:
-        // Put custom auto code here
-        if (runAsync) {
-          if(counterforAsync >= autonomoustCommands.size()){
-            break;
-          } else {
-            autonomoustCommands.get(counterforAsync++).start();
-            runAsync = false;
-          }
-        }
-        break;
-      default:
-      // Put default auto code here
-        if (runAsync) {
-          if(counterforAsync >= autonomoustCommands.size()){
-            break;
-          } else {
-            autonomoustCommands.get(counterforAsync++).start();
-            runAsync = false;
-          }
-        }
-        break;
+    if (runAsync) {
+      if(counterforAsync >= autonomoustCommands.size()){
+      } else {
+        autonomoustCommands.get(counterforAsync++).start();
+        runAsync = false;
+      }
     }
 
     
@@ -217,8 +200,8 @@ public class Robot extends TimedRobot {
         dpadPrecisionMode = true;
       } else if(controller.getPOV() == 90) {
         HardThenSoft.mIntake.set(-.5);
-        HardThenSoft.mDeliveryLeft.set(-0.2475);
-        HardThenSoft.mDeliveryRight.set(0.17);
+        HardThenSoft.mDeliveryLeft.set(-0.14);
+        HardThenSoft.mDeliveryRight.set(0.14);
         dpadPrecisionMode = true;
       } else if(controller.getPOV() == 180) {
         HardThenSoft.mDeliveryLeft.set(1);
