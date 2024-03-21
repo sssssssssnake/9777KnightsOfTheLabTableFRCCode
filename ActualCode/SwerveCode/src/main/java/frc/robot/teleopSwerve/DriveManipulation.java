@@ -1,6 +1,5 @@
 package frc.robot.teleopSwerve;
 
-import com.revrobotics.CANSparkFlex;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.HardThenSoft;
@@ -9,7 +8,6 @@ public class DriveManipulation {
     private double[] swerveModuleAngles = {0, 0, 0, 0}; // in radians
     private double[] swerveModuleSpeeds = {0, 0, 0, 0}; // in meters per second
     // Angle for the translation of the robot/ module derived from position
-    private double angleFromPosition;
     
     private double x;
     private double y;
@@ -45,10 +43,6 @@ public class DriveManipulation {
     private TurnMotor backLeft   = HardThenSoft.backLeft;
     private TurnMotor backRight  = HardThenSoft.backRight;
 
-    private CANSparkFlex frontLeftDrive  = HardThenSoft.frontLeftDrive;
-    private CANSparkFlex frontRightDrive = HardThenSoft.frontRightDrive;
-    private CANSparkFlex backLeftDrive   = HardThenSoft.backLeftDrive;
-    private CANSparkFlex backRightDrive  = HardThenSoft.backRightDrive;
 
     public DriveManipulation(XboxController getController) {
         controller = getController;
@@ -79,7 +73,6 @@ public class DriveManipulation {
             double[] positionVector = {x, y};
             // v_s
             double[][] newRotationVector = new double[4][2];
-            double[][] constantRotationVector = new double[4][2];
             
             // we need to get the x and y components of the rotation vector
             for (int i = 0; i < 4; i++) {

@@ -7,11 +7,9 @@ package frc.robot;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.wpi.first.wpilibj.IterativeRobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.autonomousCommands.AutoUpdate;
 import frc.robot.autonomousCommands.PositionThread;
 import frc.robot.autonomousCommands.RunOuttakeAuto;
 import frc.robot.teleopSwerve.DriveManipulation;
@@ -34,11 +32,10 @@ public class Robot extends TimedRobot {
   public static XboxController controller = new XboxController(0);
   private DriveManipulation drive = new DriveManipulation(controller);
   boolean precisionMode = false;
+  boolean dpadPrecisionMode = false;
 
   boolean autoAlign = false;
   double[] specialAlignmentNumbers = new double[3];
-  public boolean drivetrainControllteleop = true;
-
   double[] degrees = new double[4];
 
 
@@ -87,20 +84,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("funnyRPM", HardThenSoft.mDeliveryLeftEncoder.getVelocity());
 
 
-    // SmartDashboard.putNumber("frontLeftDrive", drive.swerveAngleOffset[0]);
-    // SmartDashboard.putNumber("frontRightDrive", drive.swerveAngleOffset[1]);
-    // SmartDashboard.putNumber("backLeftDrive", drive.swerveAngleOffset[2]);
-    // SmartDashboard.putNumber("backRightDrive", drive.swerveAngleOffset[3]);
-
-    // degrees[0] = SmartDashboard.getNumber("frontLeftDriveDegrees", drive.swerveAngleOffset[0]);
-    // degrees[1] = SmartDashboard.getNumber("frontRightDriveDegrees", drive.swerveAngleOffset[1]);
-    // degrees[2] = SmartDashboard.getNumber("backLeftDriveDegrees", drive.swerveAngleOffset[2]);
-    // degrees[3] = SmartDashboard.getNumber("backRightDriveDegrees", drive.swerveAngleOffset[3]);
-
-    // drive.swerveAngleOffset[0] = degrees[0] * (Math.PI / 180);
-    // drive.swerveAngleOffset[1] = degrees[1] * (Math.PI / 180);
-    // drive.swerveAngleOffset[2] = degrees[2] * (Math.PI / 180);
-    // drive.swerveAngleOffset[3] = degrees[3] * (Math.PI / 180);
   }
 
   /**
@@ -145,6 +128,14 @@ public class Robot extends TimedRobot {
     switch (m_autoSelected) {
       case kCustomAuto:
         // Put custom auto code here
+        if (runAsync) {
+          if(counterforAsync >= autonomoustCommands.size()){
+            break;
+          } else {
+            autonomoustCommands.get(counterforAsync++).start();
+            runAsync = false;
+          }
+        }
         break;
       case kDefaultAuto:
       default:
@@ -176,16 +167,19 @@ public class Robot extends TimedRobot {
     HardThenSoft.frontRightDrive.setIdleMode(CANSparkMax.IdleMode.kBrake);
     HardThenSoft.backLeftDrive.setIdleMode(  CANSparkMax.IdleMode.kBrake);
     HardThenSoft.backRightDrive.setIdleMode( CANSparkMax.IdleMode.kBrake);
-
-
+    
+    
   }
-
+  
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
     
-
-
+    
+    //Control the swerve drive
+    drive.setNewCenterState();
+    drive.runToState(precisionMode || dpadPrecisionMode);
+    
     if(controller.getYButtonReleased()){
       autoAlign = true;
       CameraLogic.autoAlign();
@@ -193,59 +187,42 @@ public class Robot extends TimedRobot {
 
     if(!autoAlign && !HardThenSoft.autoThreadRunning){
 
-      //Control the swerve drive
-
       //Enable/Disable Precision Drive Mode
       if (controller.getAButtonReleased()) { 
         precisionMode = !precisionMode;
       }
-
-            //Control the Intake
+      //Control the Intake
       if (controller.getRightTriggerAxis() > .1) {
         HardThenSoft.mIntake.set(controller.getRightTriggerAxis());
-      } 
-      else if (controller.getLeftTriggerAxis() > .1) {
+      } else if (controller.getLeftTriggerAxis() > .1) {
         HardThenSoft.mIntake.set(-controller.getLeftTriggerAxis());
-      } 
-      else {
+      } else {
         HardThenSoft.mIntake.set(0);
       }
+
+
 
       //Control the Delivery System
       if (controller.getPOV() == 0) {
         // SmartDashboard.putNumber("Velocity of Delivery: ", HardThenSoft.mDeliveryLeft.getEncoder().getVelocity());
         if(HardThenSoft.mDeliveryLeft.getEncoder().getVelocity() < -4700){
-            HardThenSoft.mIntake.set(-.5);
-
+          HardThenSoft.mIntake.set(-.5);
         }
         HardThenSoft.mDeliveryLeft.set(-1);
         HardThenSoft.mDeliveryRight.set(1);
-        drivetrainControllteleop = false;
-      } 
-      else if(controller.getPOV() == 90) {
-                HardThenSoft.mIntake.set(-.5);
-
+        dpadPrecisionMode = true;
+      } else if(controller.getPOV() == 90) {
+        HardThenSoft.mIntake.set(-.5);
         HardThenSoft.mDeliveryLeft.set(-0.2475);
         HardThenSoft.mDeliveryRight.set(0.17);
-        drivetrainControllteleop = false;
-      }
-      else if(controller.getPOV() == 180) {
+        dpadPrecisionMode = true;
+      } else if(controller.getPOV() == 180) {
         HardThenSoft.mDeliveryLeft.set(1);
         HardThenSoft.mDeliveryRight.set(-1);
-        drivetrainControllteleop = false;
-      }
-      else{
+        dpadPrecisionMode = true;
+      } else{
         HardThenSoft.mDelivery.stop();
-        drivetrainControllteleop = true;
-      }
-
-
-      // drivetrain stopping
-      if (drivetrainControllteleop) {
-        drive.setNewCenterState();
-        drive.runToState(precisionMode);
-      } else if (!drivetrainControllteleop) {
-        drive.stopDriveMOtors();
+        dpadPrecisionMode = false;
       }
 
 
@@ -280,7 +257,6 @@ public class Robot extends TimedRobot {
       specialAlignmentNumbers = cameraLogic.CameraLogic.postXYZ();
       HardThenSoft.killAllAsync = true;
       HardThenSoft.autoThreadRunning = false;
-      drivetrainControllteleop = true;
     }
     
     

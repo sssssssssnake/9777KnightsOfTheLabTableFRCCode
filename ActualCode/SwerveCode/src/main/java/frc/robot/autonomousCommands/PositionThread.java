@@ -1,9 +1,7 @@
 package frc.robot.autonomousCommands;
 
-import javax.swing.text.StyleContext.SmallAttributeSet;
 
 import com.revrobotics.CANSparkBase.IdleMode;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.HardThenSoft;
 import frc.robot.Robot;
@@ -12,8 +10,8 @@ public class PositionThread implements Runnable{
 
     // cosntants regarding movement
     double stopError = .3;
-    double xGate = 50;
-    double goSpeed = .4;
+    double xGate = 10;
+    double goSpeed = .5;
     double conversionRate = 5;
     double radius = 42.4264069;
     double rotationGoSpeed = .4;
@@ -90,7 +88,7 @@ public class PositionThread implements Runnable{
             HardThenSoft.intakeRunning = true;
             Thread runIntake = new Thread(new RunIntakeWithSwerve(0, 1.4));
             runIntake.start();
-            goSpeed = .1;
+            goSpeed = .2;
         }
         
         
@@ -120,7 +118,7 @@ public class PositionThread implements Runnable{
         HardThenSoft.backLeftDrive.set(0);
         HardThenSoft.backRightDrive.set(0);
 
-        sleepyNightNight(1000);
+        sleepyNightNight(400);
 
         // now we can rotate the robot using the gyro
         if (newRotation == 0) {

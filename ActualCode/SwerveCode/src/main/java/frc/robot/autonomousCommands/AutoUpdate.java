@@ -1,15 +1,11 @@
 package frc.robot.autonomousCommands;
 
 
-import javax.print.attribute.HashPrintRequestAttributeSet;
 
 import com.revrobotics.CANSparkBase.IdleMode;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.HardThenSoft;
 import frc.robot.Robot;
-import frc.robot.autonomousCommands.RunToState;
-
 
 public class AutoUpdate implements Runnable{
     // public double originalX;
