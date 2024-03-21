@@ -28,6 +28,7 @@ import cameraLogic.CameraLogic;
 public class Robot extends TimedRobot {
   private static final String kDefaultAuto = "Default";
   private static final String defaultBlueWorks = "Blue aligned";
+  private static final String backAndForth = "Out Of The Way Score";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   public static XboxController controller = new XboxController(0);
@@ -55,13 +56,10 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_chooser.setDefaultOption("Working blue auto", defaultBlueWorks);
+    m_chooser.addOption("Out Of The Way Auto", backAndForth);
     m_chooser.addOption("Default Auto", kDefaultAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
     
-    SmartDashboard.putNumber("frontLeftDriveDegrees", drive.swerveAngleOffset[0]);
-    SmartDashboard.putNumber("frontRightDriveDegrees", drive.swerveAngleOffset[1]);
-    SmartDashboard.putNumber("backLeftDriveDegrees", drive.swerveAngleOffset[2]);
-    SmartDashboard.putNumber("backRightDriveDegrees", drive.swerveAngleOffset[3]);
   }
 
   /**
@@ -73,17 +71,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putNumber("frontLeft", HardThenSoft.frontLeft.basicTurnEncoder.getAbsolutePosition().getValueAsDouble());
-    SmartDashboard.putNumber("frontRight", HardThenSoft.frontRight.basicTurnEncoder.getAbsolutePosition().getValueAsDouble());
-    SmartDashboard.putNumber("backLeft", HardThenSoft.backLeft.basicTurnEncoder.getAbsolutePosition().getValueAsDouble());
-    SmartDashboard.putNumber("backRight", HardThenSoft.backRight.basicTurnEncoder.getAbsolutePosition().getValueAsDouble());
 
     SmartDashboard.putNumber("miracleMagicX", specialAlignmentNumbers[0]);
     SmartDashboard.putNumber("miracleMagicY", specialAlignmentNumbers[1]);
     SmartDashboard.putNumber("miracleMagicZ", specialAlignmentNumbers[2]);
     SmartDashboard.putNumber("GyroRadians", HardThenSoft.navx.getAngle() * (Math.PI / 180) + Math.PI);
     SmartDashboard.putNumber("funnyRPM", HardThenSoft.mDeliveryLeftEncoder.getVelocity());
-
 
   }
 
@@ -103,10 +96,16 @@ public class Robot extends TimedRobot {
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
     switch (m_autoSelected) {
-      case kDefaultAuto:
+      case backAndForth:{
+        autonomoustCommands.add(new Thread(new RunHangDown(4, true)));
+        autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
         autonomoustCommands.add(new Thread(new PositionThread(0, -150, 0)));
+        autonomoustCommands.add(new Thread(new PositionThread(0, -60, 0, true)));
+        autonomoustCommands.add(new Thread(new PositionThread(0, 210, 0)));
+        autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
         break;
-      case defaultBlueWorks:
+      }
+      case defaultBlueWorks: {
         autonomoustCommands.add(new Thread(new RunHangDown(4, true)));
         autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
         autonomoustCommands.add(new Thread(new PositionThread(0, -80, 0)));
@@ -118,6 +117,12 @@ public class Robot extends TimedRobot {
         autonomoustCommands.add(new Thread(new PositionThread(-145, 140, 0)));
         autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
         break; 
+      }
+      case kDefaultAuto: {
+          autonomoustCommands.add(new Thread(new RunHangDown(4, true)));
+          autonomoustCommands.add(new Thread(new PositionThread(0, -150, 0)));
+          break;
+      }
       default:
         break;
     }
@@ -204,8 +209,7 @@ public class Robot extends TimedRobot {
 
       //Control the Delivery System
       if (controller.getPOV() == 0) {
-        // SmartDashboard.putNumber("Velocity of Delivery: ", HardThenSoft.mDeliveryLeft.getEncoder().getVelocity());
-        if(HardThenSoft.mDeliveryLeft.getEncoder().getVelocity() < -4700){
+        if(HardThenSoft.mDeliveryLeft.getEncoder().getVelocity() < -4700) {
           HardThenSoft.mIntake.set(-.5);
         }
         HardThenSoft.mDeliveryLeft.set(-1);
@@ -220,7 +224,7 @@ public class Robot extends TimedRobot {
         HardThenSoft.mDeliveryLeft.set(1);
         HardThenSoft.mDeliveryRight.set(-1);
         dpadPrecisionMode = true;
-      } else{
+      } else {
         HardThenSoft.mDelivery.stop();
         dpadPrecisionMode = false;
       }
@@ -245,8 +249,6 @@ public class Robot extends TimedRobot {
         HardThenSoft.gyroOffset = - HardThenSoft.navx.getAngle() / 180 * Math.PI;
         HardThenSoft.gyroOffset -= Math.PI / 4;
       }
-
-      
     } //Automatic Alignment Control
     else if(!HardThenSoft.autoThreadRunning){
       CameraLogic.autoAlign();
@@ -258,8 +260,6 @@ public class Robot extends TimedRobot {
       HardThenSoft.killAllAsync = true;
       HardThenSoft.autoThreadRunning = false;
     }
-    
-    
   }
 
   /** This function is called once when the robot is disabled. */
