@@ -111,14 +111,14 @@ public class Robot extends TimedRobot {
       case defaultBlueWorks: {
         autonomoustCommands.add(new Thread(new RunHangDown(4, true)));
         autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
-        autonomoustCommands.add(new Thread(new PositionThread(0, -80, 0)));
+        autonomoustCommands.add(new Thread(new PositionThread(0, -90, 0)));
         autonomoustCommands.add(new Thread(new PositionThread(0, -60,0, true)));
-        autonomoustCommands.add(new Thread(new PositionThread(0, 130, 0)));
+        autonomoustCommands.add(new Thread(new PositionThread(0, 140, 0)));
         autonomoustCommands.add(new Thread(new RunIntakeWithSwerve(-1, .3, true)));
         autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
-        autonomoustCommands.add(new Thread(new PositionThread(160, -50, 0)));
+        autonomoustCommands.add(new Thread(new PositionThread(160, -60, 0)));
         autonomoustCommands.add(new Thread(new PositionThread(0, -80,0, true)));
-        autonomoustCommands.add(new Thread(new PositionThread(-160, 130, 0)));
+        autonomoustCommands.add(new Thread(new PositionThread(-160, 140, 0)));
         autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
         break; 
       }
