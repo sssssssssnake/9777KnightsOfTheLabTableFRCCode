@@ -11,7 +11,7 @@ public class PositionThread implements Runnable{
     // cosntants regarding movement
     double stopError = .3;
     double xGate = 7;
-    double goSpeed = .5;
+    double goSpeed = .7;
     double conversionRate = 5;
     double radius = 42.4264069;
     double rotationGoSpeed = .4;
