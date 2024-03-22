@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.autonomousCommands.PositionThread;
 import frc.robot.autonomousCommands.RunHangDown;
+import frc.robot.autonomousCommands.RunIntakeWithSwerve;
 import frc.robot.autonomousCommands.RunOuttakeAuto;
 import frc.robot.teleopSwerve.DriveManipulation;
 import edu.wpi.first.wpilibj.XboxController;
@@ -113,6 +114,7 @@ public class Robot extends TimedRobot {
         autonomoustCommands.add(new Thread(new PositionThread(0, -80, 0)));
         autonomoustCommands.add(new Thread(new PositionThread(0, -60,0, true)));
         autonomoustCommands.add(new Thread(new PositionThread(0, 130, 0)));
+        autonomoustCommands.add(new Thread(new RunIntakeWithSwerve(-1, .3, true)));
         autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
         autonomoustCommands.add(new Thread(new PositionThread(160, -50, 0)));
         autonomoustCommands.add(new Thread(new PositionThread(0, -80,0, true)));

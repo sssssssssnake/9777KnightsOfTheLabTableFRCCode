@@ -10,7 +10,7 @@ public class PositionThread implements Runnable{
 
     // cosntants regarding movement
     double stopError = .3;
-    double xGate = 7;
+    double xGate = 5;
     double goSpeed = .7;
     double conversionRate = 5;
     double radius = 42.4264069;
@@ -86,7 +86,7 @@ public class PositionThread implements Runnable{
         
         if (runIntake) {
             HardThenSoft.intakeRunning = true;
-            Thread runIntake = new Thread(new RunIntakeWithSwerve(0, 1.4));
+            Thread runIntake = new Thread(new RunIntakeWithSwerve(1, 1.6));
             runIntake.start();
             goSpeed = .2;
         }
