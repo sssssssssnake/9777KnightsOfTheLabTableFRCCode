@@ -17,21 +17,21 @@ public final class CameraLogic {
 
     static double[] updatedTargetPos = new double[6];
 
-    static final int[] tagIds = {
+    public static final int[] tagIds = {
         7,
         4,
         11,
         13,
         14,
         15,
-        16
+        16,
     };
 
     public static double[][] idTarget = {
         //Distance from Speaker Tag
         {0, 1.9, 0},
         //distance from hang
-        {-.4, 48.2, 0},
+        {-.2, -.6, 0},
     };
 
     
@@ -45,7 +45,6 @@ public final class CameraLogic {
             return;
         }
         double[] targetPose = new double[3];
-        Thread run = null;
         int iid = (int) id.getDouble(0);
         if (iid == 0) {
             return;
@@ -84,6 +83,20 @@ public final class CameraLogic {
     public static void moveTo(double[] targetPose) {
         Thread run = new Thread(new PositionThread(targetPose[0], targetPose[1], targetPose[2]));
         run.start();
+    }
+
+    public static int getID() {
+        return (int) camera.getEntry("tid").getDouble(0);
+    }
+
+    public static boolean isIdTarget() {
+        int id = getID();
+        for (int i = 0; i < idTarget.length; i++) {
+            if (id == tagIds[i]) {
+                return true;
+            }
+        }
+        return false;
     }
 
     

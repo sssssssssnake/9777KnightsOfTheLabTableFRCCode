@@ -15,6 +15,8 @@ import frc.robot.autonomousCommands.RunHangDown;
 import frc.robot.autonomousCommands.RunOuttakeAuto;
 import frc.robot.teleopSwerve.DriveManipulation;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+
 import com.revrobotics.CANSparkMax; 
 import cameraLogic.CameraLogic;
 
@@ -239,9 +241,17 @@ public class Robot extends TimedRobot {
     }
     
     if (controller.getStartButton()) {
-      specialAlignmentNumbers = cameraLogic.CameraLogic.postXYZ();
       HardThenSoft.killAllAsync = true;
       HardThenSoft.autoThreadRunning = false;
+    }
+    specialAlignmentNumbers = cameraLogic.CameraLogic.postXYZ();
+
+    
+
+    if (specialAlignmentNumbers[0] != 0 && cameraLogic.CameraLogic.isIdTarget()) {
+      controller.setRumble(RumbleType.kBothRumble, .2);
+    } else {
+      controller.setRumble(RumbleType.kBothRumble, 0);
     }
   }
 
