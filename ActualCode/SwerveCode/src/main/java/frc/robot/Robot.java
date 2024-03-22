@@ -100,7 +100,7 @@ public class Robot extends TimedRobot {
     System.out.println("Auto selected: " + m_autoSelected);
     switch (m_autoSelected) {
       case backAndForth:{
-        autonomoustCommands.add(new Thread(new RunHangDown(2, true)));
+        autonomoustCommands.add(new Thread(new RunHangDown(2.5, true)));
         autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
         autonomoustCommands.add(new Thread(new PositionThread(0, -150, 0)));
         autonomoustCommands.add(new Thread(new PositionThread(0, -60, 0, true)));
@@ -109,7 +109,7 @@ public class Robot extends TimedRobot {
         break;
       }
       case defaultBlueWorks: {
-        autonomoustCommands.add(new Thread(new RunHangDown(2, true)));
+        autonomoustCommands.add(new Thread(new RunHangDown(2.5, true)));
         autonomoustCommands.add(new Thread(new RunOuttakeAuto(true, true)));
         autonomoustCommands.add(new Thread(new PositionThread(0, -90, 0)));
         autonomoustCommands.add(new Thread(new PositionThread(0, -60,0, true)));
