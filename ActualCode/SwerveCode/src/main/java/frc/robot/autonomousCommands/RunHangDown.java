@@ -5,7 +5,7 @@ import frc.robot.HardThenSoft;
 import frc.robot.Robot;
 
 public class RunHangDown implements Runnable {
-    long time;
+    double time;
     boolean moveOnToNextThread;
 
     @Override
@@ -17,7 +17,7 @@ public class RunHangDown implements Runnable {
         HardThenSoft.mHangRight.set(-.5);
 
         try {
-            Thread.sleep(time * 1000);
+            Thread.sleep((long) time * 1000);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -30,11 +30,11 @@ public class RunHangDown implements Runnable {
         }
     }
 
-    public RunHangDown(long seconds) {
+    public RunHangDown(double seconds) {
         time = seconds;
     }
 
-    public RunHangDown(long seconds, boolean skipToNextThread) {
+    public RunHangDown(double seconds, boolean skipToNextThread) {
         time = seconds;
         moveOnToNextThread = skipToNextThread;
     }
